@@ -4,9 +4,12 @@
 ## 📝 Présentation
 EventSync est une plateforme dynamique de gestion d’événements et d’engagement des participants en temps réel. Développé dans un cadre académique, ce projet vise à remplacer les programmes papier statiques par une interface interactive.
 ## Utilité & Contexte
+
 L'objectif est de centraliser la gestion des conférences et workshops tout en favorisant l'interaction. Les participants peuvent suivre le planning en direct, poser des questions aux intervenants (système de Q&A) et gérer leur propre itinéraire via des favoris.
+
 ------------------------------
 ## 🚀 Installation et Utilisation
+
 * Node.js (v18+)
 * Java JDK (17+)
 * Maven
