@@ -1,6 +1,4 @@
-Here is the English translation of your README, rewritten in a conventional and professional format.
 
-```markdown
 # EventSync - Core Platform 📅
 
 ## 📝 Overview
@@ -89,4 +87,3 @@ This project is a collective achievement by the Gama-HEI organization.
 ## ⚖️ Legal Information
 
 This project is distributed under the MIT License. As part of this evaluation, the code is freely accessible to reviewers and students.
-```
