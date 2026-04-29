@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import school.hei.event_sync.model.enums.LinkType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity()
 @Table(name = "speaker")
@@ -43,4 +45,21 @@ public class Speaker {
     @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpeakerLink> links = new ArrayList<>();
 
+
+    public void addLink(SpeakerLink link) {
+        links.add(link);
+        link.setSpeaker(this);
+    }
+
+    public void removeLink(SpeakerLink link) {
+        links.remove(link);
+        link.setSpeaker(null);
+    }
+
+    public List<SpeakerLink> getLinksByType(LinkType type) {
+        return links
+                .stream()
+                .filter(link -> link.getLinkType() == type)
+                .collect(Collectors.toList());
+    }
 }
