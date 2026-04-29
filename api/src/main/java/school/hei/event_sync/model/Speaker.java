@@ -10,27 +10,32 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "room")
+@Entity()
+@Table(name = "speaker")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Room {
+public class Speaker {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false, length = 255)
-    private String name;
+    private String fullName;
+
+    @Column(nullable = false)
+    private String profilePicture;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String bio;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
 }
