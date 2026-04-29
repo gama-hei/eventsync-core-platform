@@ -1,22 +1,24 @@
 package school.hei.event_sync.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "event")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(length = 255)
+    @Column(nullable = false, length = 200)
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -28,7 +30,7 @@ public class Event {
     @Column(name = "end_date", nullable = false)
     private Timestamp endDate;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 500)
     private String location;
 
     @CreationTimestamp
@@ -38,13 +40,4 @@ public class Event {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-
-
-    @PrePersist
-    @PreUpdate
-    public void validatedDates() {
-        if (endDate != null && startDate != null && endDate.before(startDate))
-            throw new InvalidParameterException("endDate and/or startDate must be before start date");
-    }
-
 }

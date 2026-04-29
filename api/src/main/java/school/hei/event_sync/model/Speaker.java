@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import school.hei.event_sync.model.enums.LinkType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Entity()
+@Entity
 @Table(name = "speaker")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,25 +24,28 @@ public class Speaker {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(nullable = false)
+    @Column(name = "profile_picture", length = 500)
     private String profilePicture;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String bio;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpeakerLink> links = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "speakers")
+    private List<Session> sessions = new ArrayList<>();
 
     public void addLink(SpeakerLink link) {
         links.add(link);
@@ -54,12 +55,5 @@ public class Speaker {
     public void removeLink(SpeakerLink link) {
         links.remove(link);
         link.setSpeaker(null);
-    }
-
-    public List<SpeakerLink> getLinksByType(LinkType type) {
-        return links
-                .stream()
-                .filter(link -> link.getLinkType() == type)
-                .collect(Collectors.toList());
     }
 }
