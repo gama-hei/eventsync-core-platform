@@ -1,0 +1,1334 @@
+openapi: 3.0.0
+info:
+  title: EventSync API
+  description: |
+    EventSync is an event management and real-time participant engagement platform.
+    This API provides endpoints for managing events, sessions, speakers, rooms, and live Q&A.
+  version: 1.0.0
+  contact:
+    name: EventSync Support
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.eventsync.com/api
+    description: Production server
+
+tags:
+  - name: Events
+    description: Public event information
+  - name: Sessions
+    description: Session details and live status
+  - name: Rooms
+    description: Venue/room management
+  - name: Speakers
+    description: Speaker profiles
+  - name: Questions
+    description: Live Q&A system
+  - name: Admin Events
+    description: Event management (authenticated)
+  - name: Admin Sessions
+    description: Session management (authenticated)
+  - name: Admin Rooms
+    description: Room management (authenticated)
+  - name: Admin Speakers
+    description: Speaker management (authenticated)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for admin authentication
+
+  schemas:
+    # ========== CORE ENTITIES ==========
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        title:
+          type: string
+          example: "TechConf 2025"
+        description:
+          type: string
+          example: "Annual technology conference"
+        startDate:
+          type: string
+          format: date-time
+          example: "2025-06-10T09:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2025-06-12T18:00:00Z"
+        location:
+          type: string
+          example: "Convention Center, San Francisco"
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        title:
+          type: string
+          example: "Keynote: Future of AI"
+        description:
+          type: string
+          example: "Opening keynote about artificial intelligence"
+        startTime:
+          type: string
+          format: date-time
+          example: "2025-06-10T10:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          example: "2025-06-10T11:30:00Z"
+        roomId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174010"
+        capacity:
+          type: integer
+          example: 200
+          description: "Informative only, not enforced"
+        eventId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        speakers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Speaker'
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174010"
+        name:
+          type: string
+          example: "Grand Ballroom"
+
+    Speaker:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174020"
+        fullName:
+          type: string
+          example: "Dr. Sarah Chen"
+        profilePicture:
+          type: string
+          format: uri
+          example: "https://storage.eventsync.com/profiles/sarah-chen.jpg"
+        bio:
+          type: string
+          example: "AI researcher with 15+ years of experience"
+        externalLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+          example: ["https://twitter.com/sarahchen", "https://linkedin.com/in/sarahchen"]
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174030"
+        content:
+          type: string
+          example: "How will AI impact software development?"
+        authorName:
+          type: string
+          nullable: true
+          example: "Alex Johnson"
+          description: "Optional - if null, question is anonymous"
+        upvotes:
+          type: integer
+          minimum: 0
+          example: 42
+        sessionId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-06-10T10:15:00Z"
+
+    # ========== REQUEST BODIES ==========
+    CreateEventRequest:
+      type: object
+      required:
+        - title
+        - description
+        - startDate
+        - endDate
+        - location
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        location:
+          type: string
+          minLength: 1
+          maxLength: 500
+
+    UpdateEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        location:
+          type: string
+          minLength: 1
+          maxLength: 500
+
+    CreateSessionRequest:
+      type: object
+      required:
+        - title
+        - description
+        - startTime
+        - endTime
+        - roomId
+        - speakerIds
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        roomId:
+          type: string
+          format: uuid
+        capacity:
+          type: integer
+          minimum: 0
+        speakerIds:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+
+    UpdateSessionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        roomId:
+          type: string
+          format: uuid
+        capacity:
+          type: integer
+          minimum: 0
+
+    AssignSpeakersRequest:
+      type: object
+      required:
+        - speakerIds
+      properties:
+        speakerIds:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+
+    CreateRoomRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+
+    UpdateRoomRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+
+    CreateSpeakerRequest:
+      type: object
+      required:
+        - fullName
+        - bio
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        profilePicture:
+          type: string
+          format: uri
+        bio:
+          type: string
+          minLength: 1
+        externalLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    UpdateSpeakerRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        profilePicture:
+          type: string
+          format: uri
+        bio:
+          type: string
+          minLength: 1
+        externalLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    CreateQuestionRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 500
+        authorName:
+          type: string
+          maxLength: 100
+          description: "Optional - if not provided, question is anonymous"
+
+    # ========== RESPONSES ==========
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Resource not found"
+
+    LiveSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        room:
+          $ref: '#/components/schemas/Room'
+        speakers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              fullName:
+                type: string
+
+    SessionWithDetails:
+      allOf:
+        - $ref: '#/components/schemas/Session'
+
+    RoomSessions:
+      type: object
+      properties:
+        room:
+          $ref: '#/components/schemas/Room'
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+
+# ========== PATHS ==========
+paths:
+  # ---------- PUBLIC: Events ----------
+  /events:
+    get:
+      tags: [Events]
+      summary: List all events
+      description: Returns all public events
+      operationId: listEvents
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+
+  /events/{eventId}:
+    get:
+      tags: [Events]
+      summary: Get event details
+      description: Returns detailed information about a specific event including its sessions
+      operationId: getEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Event found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- PUBLIC: Sessions ----------
+  /sessions:
+    get:
+      tags: [Sessions]
+      summary: List all sessions
+      description: Returns all sessions with optional filtering
+      operationId: listSessions
+      parameters:
+        - name: eventId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by event ID
+        - name: roomId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by room ID
+        - name: speakerId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by speaker ID
+        - name: live
+          in: query
+          schema:
+            type: boolean
+          description: Filter to only currently live sessions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+
+  /sessions/live:
+    get:
+      tags: [Sessions]
+      summary: Get live sessions
+      description: Returns all sessions currently in progress
+      operationId: getLiveSessions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LiveSession'
+
+  /sessions/{sessionId}:
+    get:
+      tags: [Sessions]
+      summary: Get session details
+      description: Returns detailed information about a specific session including speakers and questions
+      operationId: getSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionWithDetails'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- PUBLIC: Rooms ----------
+  /rooms:
+    get:
+      tags: [Rooms]
+      summary: List all rooms
+      description: Returns all available rooms/venues
+      operationId: listRooms
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+
+  /rooms/{roomId}/sessions:
+    get:
+      tags: [Rooms]
+      summary: Get sessions by room
+      description: Returns all sessions in a specific room, ordered chronologically
+      operationId: getRoomSessions
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomSessions'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- PUBLIC: Speakers ----------
+  /speakers:
+    get:
+      tags: [Speakers]
+      summary: List all speakers
+      description: Returns all speakers with their basic information
+      operationId: listSpeakers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Speaker'
+
+  /speakers/{speakerId}:
+    get:
+      tags: [Speakers]
+      summary: Get speaker profile
+      description: Returns detailed speaker profile including their sessions
+      operationId: getSpeaker
+      parameters:
+        - name: speakerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Speaker found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '404':
+          description: Speaker not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- PUBLIC: Questions ----------
+  /sessions/{sessionId}/questions:
+    get:
+      tags: [Questions]
+      summary: Get session questions
+      description: Returns all questions for a session, sorted by upvotes (descending)
+      operationId: getSessionQuestions
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [Questions]
+      summary: Submit a question
+      description: |
+        Submits a new question for a session.
+        **Business rule:** Question can only be submitted if the session is currently live.
+      operationId: createQuestion
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuestionRequest'
+      responses:
+        '201':
+          description: Question created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Session not live
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /questions/{questionId}/upvote:
+    post:
+      tags: [Questions]
+      summary: Upvote a question
+      description: Increments the upvote counter for a question
+      operationId: upvoteQuestion
+      parameters:
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Upvote successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '404':
+          description: Question not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- ADMIN: Events ----------
+  /admin/events:
+    post:
+      security:
+        - BearerAuth: []
+      tags: [Admin Events]
+      summary: Create an event
+      description: Creates a new event (admin only)
+      operationId: createEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - not an admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/events/{eventId}:
+    put:
+      security:
+        - BearerAuth: []
+      tags: [Admin Events]
+      summary: Update an event
+      description: Updates an existing event (admin only)
+      operationId: updateEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventRequest'
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      security:
+        - BearerAuth: []
+      tags: [Admin Events]
+      summary: Delete an event
+      description: Deletes an event and all its associated sessions and questions (admin only)
+      operationId: deleteEvent
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Event deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- ADMIN: Sessions ----------
+  /admin/events/{eventId}/sessions:
+    post:
+      security:
+        - BearerAuth: []
+      tags: [Admin Sessions]
+      summary: Create a session
+      description: Creates a new session for a specific event (admin only)
+      operationId: createSession
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/sessions/{sessionId}:
+    put:
+      security:
+        - BearerAuth: []
+      tags: [Admin Sessions]
+      summary: Update a session
+      description: Updates an existing session (admin only)
+      operationId: updateSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionRequest'
+      responses:
+        '200':
+          description: Session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      security:
+        - BearerAuth: []
+      tags: [Admin Sessions]
+      summary: Delete a session
+      description: Deletes a session and all its associated questions (admin only)
+      operationId: deleteSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Session deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/sessions/{sessionId}/speakers:
+    patch:
+      security:
+        - BearerAuth: []
+      tags: [Admin Sessions]
+      summary: Assign speakers to a session
+      description: Assigns one or more speakers to a session (admin only)
+      operationId: assignSpeakers
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignSpeakersRequest'
+      responses:
+        '200':
+          description: Speakers assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- ADMIN: Rooms ----------
+  /admin/rooms:
+    post:
+      security:
+        - BearerAuth: []
+      tags: [Admin Rooms]
+      summary: Create a room
+      description: Creates a new room/venue (admin only)
+      operationId: createRoom
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoomRequest'
+      responses:
+        '201':
+          description: Room created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/rooms/{roomId}:
+    put:
+      security:
+        - BearerAuth: []
+      tags: [Admin Rooms]
+      summary: Update a room
+      description: Updates an existing room (admin only)
+      operationId: updateRoom
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRoomRequest'
+      responses:
+        '200':
+          description: Room updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      security:
+        - BearerAuth: []
+      tags: [Admin Rooms]
+      summary: Delete a room
+      description: Deletes a room (admin only)
+      operationId: deleteRoom
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Room deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ---------- ADMIN: Speakers ----------
+  /admin/speakers:
+    post:
+      security:
+        - BearerAuth: []
+      tags: [Admin Speakers]
+      summary: Create a speaker
+      description: Creates a new speaker profile (admin only)
+      operationId: createSpeaker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpeakerRequest'
+      responses:
+        '201':
+          description: Speaker created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin/speakers/{speakerId}:
+    put:
+      security:
+        - BearerAuth: []
+      tags: [Admin Speakers]
+      summary: Update a speaker
+      description: Updates an existing speaker profile (admin only)
+      operationId: updateSpeaker
+      parameters:
+        - name: speakerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpeakerRequest'
+      responses:
+        '200':
+          description: Speaker updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Speaker'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Speaker not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      security:
+        - BearerAuth: []
+      tags: [Admin Speakers]
+      summary: Delete a speaker
+      description: Deletes a speaker profile (admin only)
+      operationId: deleteSpeaker
+      parameters:
+        - name: speakerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Speaker deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Speaker not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
