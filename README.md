@@ -1,70 +1,92 @@
-## EventSync - Core Platform 📅
+Here is the English translation of your README, rewritten in a conventional and professional format.
 
+```markdown
+# EventSync - Core Platform 📅
 
-## 📝 Présentation
-EventSync est une plateforme dynamique de gestion d’événements et d’engagement des participants en temps réel. Développé dans un cadre académique, ce projet vise à remplacer les programmes papier statiques par une interface interactive.
-## Utilité & Contexte
+## 📝 Overview
 
-L'objectif est de centraliser la gestion des conférences et workshops tout en favorisant l'interaction. Les participants peuvent suivre le planning en direct, poser des questions aux intervenants (système de Q&A) et gérer leur propre itinéraire via des favoris.
+EventSync is a dynamic event management and real-time participant engagement platform. Developed as part of an academic project, it aims to replace static paper schedules with an interactive interface.
 
-------------------------------
-## 🚀 Installation et Utilisation
+## Purpose & Context
 
-* Node.js (v18+)
-* Java JDK (17+)
-* Maven
-* PostgreSQL
-## Clonage du projet
+The goal is to centralize conference and workshop management while fostering interaction. Participants can follow the live schedule, ask speakers questions (via a Q&A system), and manage their own itinerary using a favorites system.
 
+---
+
+## 🚀 Installation & Usage
+
+### Prerequisites
+
+- Node.js (v18+)
+- Java JDK (17+)
+- Maven
+- PostgreSQL
+
+### Clone the Project
+
+```bash
 git clone https://github.com
 cd eventsync-core-platform
+```
 
-## Lancement du Backend (Spring Boot)
+### Running the Backend (Spring Boot)
 
-   1. Configurez votre fichier src/main/resources/application.properties (Base de données).
-   2. Lancez le serveur :
+1. Configure your `src/main/resources/application.properties` file (database settings).
+2. Start the server:
 
+```bash
 mvn spring-boot:run
+```
 
-Le serveur sera accessible sur http://localhost:8080
-## Lancement du Frontend (Next.js)
+The server will be available at `http://localhost:8080`
 
-   1. Allez dans le dossier frontend : cd frontend
-   2. Installez les dépendances : npm install
-   3. Lancez le mode développement : npm run dev
-   L'application sera accessible sur http://localhost:3000
+### Running the Frontend (Next.js)
 
-------------------------------
-## 📖 Documentation & Fonctionnalités## Structure du projet
+1. Navigate to the frontend folder: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
 
-* /backend : API REST robuste gérant les entités (Événements, Sessions, Speakers, Questions).
-* /frontend : Interface utilisateur moderne avec rendu côté serveur (SSR) pour le SEO et le dynamisme.
+The application will be available at `http://localhost:3000`
 
-## Fonctionnalités Clés
+---
 
-* Dashboard Admin : Gestion complète du cycle de vie des événements.
-* Planning Multi-Track : Visualisation des sessions par salle et par horaire.
-* Détection "Live" : Badge automatique sur les sessions en cours.
-* Système de Q&A : Pose de questions anonymes et système de "Upvote" en temps réel.
-* Favoris : Sauvegarde locale des sessions préférées (Local Storage).
+## 📖 Documentation & Features
 
-------------------------------
+### Project Structure
+
+- `/backend` : Robust REST API managing entities (Events, Sessions, Speakers, Questions).
+- `/frontend` : Modern user interface with Server-Side Rendering (SSR) for SEO and dynamic content.
+
+### Key Features
+
+- **Admin Dashboard** : Full event lifecycle management.
+- **Multi-Track Schedule** : View sessions by room and time slot.
+- **Live Detection** : Automatic badge on currently running sessions.
+- **Q&A System** : Ask anonymous questions and real-time upvoting.
+- **Favorites** : Locally save preferred sessions (Local Storage).
+
+---
+
 ## 🤝 Collaboration
-Ce projet est une réalisation collective de l'organisation Gama-HEI.
-## Règles de contribution
 
-   1. Branches : Créez une branche par fonctionnalité (feat/nom-feature).
-   2. Pull Requests : Chaque PR doit être revue par au moins un autre membre de l'équipe avant d'être fusionnée vers main.
-   3. Commits : Merci de respecter la convention [Conventional Commits](https://www.conventionalcommits.org/).
+This project is a collective achievement by the Gama-HEI organization.
 
-## L'équipe (4 membres)
+### Contribution Guidelines
 
-* Asmine/Pseudo 1] - Lead Frontend / Next.js
-* NassaiGael/Pseudo 2] - Lead Backend / Spring Boot
-* mahery/mekill404 - Base de données & API
-* Arnel - Design & Documentation
+1. **Branches** : Create one branch per feature (`feat/feature-name`).
+2. **Pull Requests** : Each PR must be reviewed by at least one other team member before merging into `main`.
+3. **Commits** : Please follow the [Conventional Commits](https://www.conventionalcommits.org/) convention.
 
-------------------------------
-## ⚖️ Informations Légales
-Ce projet est distribué sous la licence MIT. Dans le cadre de cet examen, le code est libre de consultation pour les évaluateurs et les étudiants.
+### The Team (4 members)
 
+- **Asmine** - Lead Frontend / Next.js
+- **Gael** (`nassaigael`) - Lead Backend / Spring Boot
+- **Mahery** (`mekill404`) - Database & API
+- **Arnel** - Design & Documentation
+
+---
+
+## ⚖️ Legal Information
+
+This project is distributed under the MIT License. As part of this evaluation, the code is freely accessible to reviewers and students.
+```
