@@ -60,7 +60,7 @@ Ce projet est une réalisation collective de l'organisation Gama-HEI.
 ## L'équipe (4 membres)
 
 * Asmine/Pseudo 1] - Lead Frontend / Next.js
-* Gael/Pseudo 2] - Lead Backend / Spring Boot
+* NassaiGael/Pseudo 2] - Lead Backend / Spring Boot
 * mahery/mekill404 - Base de données & API
 * Arnel - Design & Documentation
 
