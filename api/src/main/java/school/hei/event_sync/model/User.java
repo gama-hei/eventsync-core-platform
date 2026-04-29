@@ -2,7 +2,6 @@ package school.hei.event_sync.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +14,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "app_user")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -36,10 +34,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
 
     @Column(name = "last_login")
     private Timestamp lastLogin;
