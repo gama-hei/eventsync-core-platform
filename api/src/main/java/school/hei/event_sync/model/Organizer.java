@@ -4,18 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import school.hei.event_sync.model.enums.Role;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "organizer")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Builder
+public class Organizer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,9 +30,9 @@ public class User {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;
 
     @Column(name = "last_login")
     private Timestamp lastLogin;
