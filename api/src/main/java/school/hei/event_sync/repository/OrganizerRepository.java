@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<Organizer, UUID> {
+public interface OrganizerRepository extends JpaRepository<Organizer, UUID> {
     Optional<Organizer> findByEmail(String email);
     boolean existsByEmail(String email);
     Optional<Organizer> findByEmailAndIsActiveTrue(String email);
