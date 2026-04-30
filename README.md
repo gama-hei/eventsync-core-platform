@@ -77,10 +77,9 @@ This project is a collective achievement by the Gama-HEI organization.
 
 ### The Team (4 members)
 
-- **Asmine** - Lead Frontend / Next.js
+- **Asmine** (`AsmineRazafiarivelo1402`)  & **Arnell** (`Arnel-rah`) - Lead Frontend / Next.js
 - **Gael** (`nassaigael`) - Lead Backend / Spring Boot
-- **Mahery** (`mekill404`) - Database & API
-- **Arnel** - Design & Documentation
+- **Mahery** (`mekill404`) - Database & Documentation
 
 ---
 
