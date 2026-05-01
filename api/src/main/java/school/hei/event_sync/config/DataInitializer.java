@@ -31,8 +31,6 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
 
             organizerRepository.save(organizer);
-            log.info("✅ Default organizer created: organizer@eventsync.com / Organizer123!");
-            log.info("⚠️  PLEASE CHANGE THIS PASSWORD ON FIRST LOGIN!");
         } else {
             log.info("✅ Database already contains {} organizers", organizerRepository.count());
         }
