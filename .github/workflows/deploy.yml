@@ -10,7 +10,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ci
     steps:
       - name: Trigger Render Deploy Hook
         run: |
           curl -f "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
