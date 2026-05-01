@@ -7,18 +7,17 @@ import school.hei.event_sync.dto.request.CreateRoomRequest;
 import school.hei.event_sync.dto.request.UpdateRoomRequest;
 import school.hei.event_sync.dto.response.RoomResponse;
 import school.hei.event_sync.dto.response.RoomSessionsResponse;
-import school.hei.event_sync.mapper.RoomMapper;
-import school.hei.event_sync.mapper.SessionMapper;
+import school.hei.event_sync.dto.response.SessionSummary;
 import school.hei.event_sync.model.Room;
 import school.hei.event_sync.model.Session;
 import school.hei.event_sync.repository.RoomRepository;
 import school.hei.event_sync.repository.SessionRepository;
+import school.hei.event_sync.utils.DateUtils;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +25,10 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final SessionRepository sessionRepository;
-    private final RoomMapper roomMapper;
-    private final SessionMapper sessionMapper;
 
     public List<RoomResponse> listRooms() {
         return roomRepository.findAll().stream()
-                .map(roomMapper::toDto)
+                .map(this::toRoomResponse)
                 .toList();
     }
 
@@ -40,8 +37,8 @@ public class RoomService {
                 .orElseThrow(() -> new EntityNotFoundException("Room not found: " + roomId));
         List<Session> sessions = sessionRepository.findByRoom_Id(roomId);
         RoomSessionsResponse response = new RoomSessionsResponse();
-        response.setRoom(roomMapper.toDto(room));
-        response.setSessions(sessions.stream().map(sessionMapper::toSummary).toList());
+        response.setRoom(toRoomResponse(room));
+        response.setSessions(sessions.stream().map(this::toSessionSummary).toList());
         return response;
     }
 
@@ -50,9 +47,9 @@ public class RoomService {
         if (roomRepository.existsByName(request.getName())) {
             throw new EntityExistsException("Room with name '" + request.getName() + "' already exists");
         }
-        Room room = roomMapper.toEntity(request);
+        Room room = toRoomEntity(request);
         room = roomRepository.save(room);
-        return roomMapper.toDto(room);
+        return toRoomResponse(room);
     }
 
     @Transactional
@@ -66,7 +63,7 @@ public class RoomService {
             room.setName(request.getName());
         }
         room = roomRepository.save(room);
-        return roomMapper.toDto(room);
+        return toRoomResponse(room);
     }
 
     @Transactional
@@ -75,5 +72,30 @@ public class RoomService {
             throw new EntityNotFoundException("Room not found: " + roomId);
         }
         roomRepository.deleteById(roomId);
+    }
+
+    private RoomResponse toRoomResponse(Room room) {
+        RoomResponse dto = new RoomResponse();
+        dto.setId(room.getId());
+        dto.setName(room.getName());
+        return dto;
+    }
+
+    private SessionSummary toSessionSummary(Session session) {
+        SessionSummary summary = new SessionSummary();
+        summary.setId(session.getId());
+        summary.setTitle(session.getTitle());
+        summary.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
+        summary.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
+        summary.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
+        summary.setCapacity(session.getCapacity());
+        summary.setEventId(session.getEvent() != null ? session.getEvent().getId() : null);
+        return summary;
+    }
+
+    private Room toRoomEntity(CreateRoomRequest request) {
+        Room room = new Room();
+        room.setName(request.getName());
+        return room;
     }
 }
