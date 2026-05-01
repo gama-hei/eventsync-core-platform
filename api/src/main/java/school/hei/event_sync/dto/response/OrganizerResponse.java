@@ -9,6 +9,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class OrganizerResponse {
     private UUID id;
     private String email;
