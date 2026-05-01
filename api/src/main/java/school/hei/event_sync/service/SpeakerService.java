@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import school.hei.event_sync.dto.request.CreateSpeakerRequest;
 import school.hei.event_sync.dto.request.UpdateSpeakerRequest;
+import school.hei.event_sync.dto.response.SessionSummary;
 import school.hei.event_sync.dto.response.SpeakerResponse;
-import school.hei.event_sync.mapper.SpeakerMapper;
+import school.hei.event_sync.dto.response.SpeakerSummary;
 import school.hei.event_sync.model.Speaker;
 import school.hei.event_sync.model.SpeakerLink;
+import school.hei.event_sync.model.Session;
 import school.hei.event_sync.repository.SpeakerLinkRepository;
 import school.hei.event_sync.repository.SpeakerRepository;
+import school.hei.event_sync.utils.DateUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -23,25 +26,23 @@ public class SpeakerService {
 
     private final SpeakerRepository speakerRepository;
     private final SpeakerLinkRepository speakerLinkRepository;
-    private final SpeakerMapper speakerMapper;
 
     public List<SpeakerResponse> listSpeakers() {
         return speakerRepository.findAll().stream()
-                .map(speakerMapper::toDto)
+                .map(this::toSpeakerResponse)
                 .toList();
     }
 
     public SpeakerResponse getSpeakerById(UUID id) {
         Speaker speaker = speakerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Speaker not found: " + id));
-        return speakerMapper.toDto(speaker);
+        return toSpeakerResponse(speaker);
     }
 
     @Transactional
     public SpeakerResponse createSpeaker(CreateSpeakerRequest request) {
-        Speaker speaker = speakerMapper.toEntity(request);
+        Speaker speaker = toSpeakerEntity(request);
         if (request.getExternalLinks() != null && !request.getExternalLinks().isEmpty()) {
-            List<SpeakerLink> links = new ArrayList<>();
             for (String url : request.getExternalLinks()) {
                 SpeakerLink link = new SpeakerLink();
                 link.setLinkUrl(url);
@@ -49,14 +50,14 @@ public class SpeakerService {
             }
         }
         speaker = speakerRepository.save(speaker);
-        return speakerMapper.toDto(speaker);
+        return toSpeakerResponse(speaker);
     }
 
     @Transactional
     public SpeakerResponse updateSpeaker(UUID speakerId, UpdateSpeakerRequest request) {
         Speaker speaker = speakerRepository.findById(speakerId)
                 .orElseThrow(() -> new EntityNotFoundException("Speaker not found: " + speakerId));
-        speakerMapper.updateFromRequest(request, speaker);
+        applyUpdateRequest(request, speaker);
 
         if (request.getExternalLinks() != null) {
             speakerLinkRepository.deleteAll(speaker.getLinks());
@@ -68,7 +69,7 @@ public class SpeakerService {
             }
         }
         speaker = speakerRepository.save(speaker);
-        return speakerMapper.toDto(speaker);
+        return toSpeakerResponse(speaker);
     }
 
     @Transactional
@@ -77,5 +78,58 @@ public class SpeakerService {
             throw new EntityNotFoundException("Speaker not found: " + speakerId);
         }
         speakerRepository.deleteById(speakerId);
+    }
+
+    // ---------- Conversions ----------
+    private SpeakerResponse toSpeakerResponse(Speaker speaker) {
+        SpeakerResponse dto = new SpeakerResponse();
+        dto.setId(speaker.getId());
+        dto.setFullName(speaker.getFullName());
+        dto.setProfilePicture(speaker.getProfilePicture());
+        dto.setBio(speaker.getBio());
+        if (speaker.getLinks() != null) {
+            dto.setExternalLinks(speaker.getLinks().stream()
+                    .map(SpeakerLink::getLinkUrl)
+                    .toList());
+        }
+        if (speaker.getSessions() != null) {
+            dto.setSessions(speaker.getSessions().stream()
+                    .map(this::toSessionSummary)
+                    .toList());
+        }
+        return dto;
+    }
+
+    private SpeakerSummary toSpeakerSummary(Speaker speaker) {
+        SpeakerSummary summary = new SpeakerSummary();
+        summary.setId(speaker.getId());
+        summary.setFullName(speaker.getFullName());
+        return summary;
+    }
+
+    private SessionSummary toSessionSummary(Session session) {
+        SessionSummary summary = new SessionSummary();
+        summary.setId(session.getId());
+        summary.setTitle(session.getTitle());
+        summary.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
+        summary.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
+        summary.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
+        summary.setCapacity(session.getCapacity());
+        summary.setEventId(session.getEvent() != null ? session.getEvent().getId() : null);
+        return summary;
+    }
+
+    private Speaker toSpeakerEntity(CreateSpeakerRequest request) {
+        Speaker speaker = new Speaker();
+        speaker.setFullName(request.getFullName());
+        speaker.setProfilePicture(request.getProfilePicture());
+        speaker.setBio(request.getBio());
+        return speaker;
+    }
+
+    private void applyUpdateRequest(UpdateSpeakerRequest request, Speaker speaker) {
+        if (request.getFullName() != null) speaker.setFullName(request.getFullName());
+        if (request.getProfilePicture() != null) speaker.setProfilePicture(request.getProfilePicture());
+        if (request.getBio() != null) speaker.setBio(request.getBio());
     }
 }
