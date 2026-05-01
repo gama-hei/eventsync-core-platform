@@ -1,5 +1,7 @@
 package school.hei.event_sync.controller;
 
+import school.hei.event_sync.dto.request.ChangePasswordRequest;
+import school.hei.event_sync.dto.request.LoginRequest;
 import school.hei.event_sync.model.Organizer;
 import school.hei.event_sync.service.OrganizerAuthService;
 import lombok.RequiredArgsConstructor;
@@ -68,25 +70,4 @@ public class OrganizerAuthController {
             return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
         }
     }
-}
-
-// Request DTOs
-class LoginRequest {
-    private String email;
-    private String password;
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-}
-
-class ChangePasswordRequest {
-    private String oldPassword;
-    private String newPassword;
-
-    public String getOldPassword() { return oldPassword; }
-    public void setOldPassword(String oldPassword) { this.oldPassword = oldPassword; }
-    public String getNewPassword() { return newPassword; }
-    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 }
