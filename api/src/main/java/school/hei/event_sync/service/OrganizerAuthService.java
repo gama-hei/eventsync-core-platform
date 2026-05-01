@@ -1,5 +1,6 @@
 package school.hei.event_sync.service;
 
+import school.hei.event_sync.dto.response.LoginResponse;
 import school.hei.event_sync.model.Organizer;
 import school.hei.event_sync.repository.OrganizerRepository;
 import school.hei.event_sync.security.JwtUtil;
@@ -30,7 +31,7 @@ public class OrganizerAuthService {
     private final UserDetailsService userDetailsService;
 
     @Transactional
-    public Map<String, Object> authenticate(String email, String password) {
+    public LoginResponse authenticate(String email, String password) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
@@ -47,14 +48,13 @@ public class OrganizerAuthService {
             organizer.setLastLogin(Timestamp.from(Instant.now()));
             organizerRepository.save(organizer);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("type", "Bearer");
-            response.put("organizerId", organizer.getId());
-            response.put("email", organizer.getEmail());
-            response.put("fullName", organizer.getFullName());
-
-            return response;
+            return LoginResponse.builder()
+                    .token(token)
+                    .type("Bearer")
+                    .organizerId(organizer.getId())
+                    .email(email)
+                    .fullName(organizer.getFullName())
+                    .build();
 
         } catch (Exception e) {
             throw new RuntimeException("Invalid email or password");
