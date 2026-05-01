@@ -1,4 +1,4 @@
-package school.hei.event_sync.dto.reponse;
+package school.hei.event_sync.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
