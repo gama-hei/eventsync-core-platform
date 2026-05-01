@@ -1,7 +1,12 @@
 package school.hei.event_sync.controller;
 
+import org.springframework.http.HttpStatus;
 import school.hei.event_sync.dto.request.ChangePasswordRequest;
 import school.hei.event_sync.dto.request.LoginRequest;
+import school.hei.event_sync.dto.response.ErrorResponse;
+import school.hei.event_sync.dto.response.LoginResponse;
+import school.hei.event_sync.dto.response.MessageResponse;
+import school.hei.event_sync.dto.response.OrganizerResponse;
 import school.hei.event_sync.model.Organizer;
 import school.hei.event_sync.service.OrganizerAuthService;
 import lombok.RequiredArgsConstructor;
@@ -22,33 +27,41 @@ public class OrganizerAuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
-            Map<String, Object> authResponse = organizerAuthService.authenticate(
+            LoginResponse response = organizerAuthService.authenticate(
                     request.getEmail(),
                     request.getPassword()
             );
-            return ResponseEntity.ok(authResponse);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(errorResponse);
         }
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentOrganizer(@RequestHeader("Authorization") String authHeader) {
         try {
-            // Extract token from Bearer header
             String token = authHeader.substring(7);
             Organizer organizer = organizerAuthService.validateTokenAndGetOrganizer(token);
 
-            return ResponseEntity.ok(Map.of(
-                    "id", organizer.getId(),
-                    "email", organizer.getEmail(),
-                    "fullName", organizer.getFullName(),
-                    "isActive", organizer.getIsActive(),
-                    "lastLogin", organizer.getLastLogin(),
-                    "createdAt", organizer.getCreatedAt()
-            ));
+            OrganizerResponse organizerResponse = OrganizerResponse.builder()
+                    .id(organizer.getId())
+                    .email(organizer.getEmail())
+                    .fullName(organizer.getFullName())
+                    .isActive(organizer.getIsActive())
+                    .lastLogin(organizer.getLastLogin())
+                    .createdAt(organizer.getCreatedAt())
+                    .build();
+
+            return ResponseEntity.ok(organizerResponse);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity
+                    .status(401)
+                    .body(errorResponse);
         }
     }
 
@@ -65,9 +78,14 @@ public class OrganizerAuthController {
                     request.getNewPassword()
             );
 
-            return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+            MessageResponse messageResponse = new MessageResponse("Password changed successfully");
+
+            return ResponseEntity.ok(messageResponse);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(errorResponse);
         }
     }
 }
