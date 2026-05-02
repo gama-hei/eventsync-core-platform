@@ -1,4 +1,3 @@
-
 export interface Event {
   id: string;
   title: string;
@@ -34,7 +33,7 @@ export interface Session {
   description: string;
   startTime: string;
   endTime: string;
-  room: string;
+  room: Room;
   capacity?: number;
   speakers: Speaker[];
   isLive: boolean;
