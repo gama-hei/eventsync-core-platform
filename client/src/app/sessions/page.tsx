@@ -1,6 +1,6 @@
 import { CardDemo } from "@/components/ui/CardDemo";
 import EventList from "@/components/ui/eventCard";
-import { Event } from "@/types/types";
+import { Event, Session } from "@/types/types";
 const events: Event[] = [
   {
     id: "1",
@@ -22,11 +22,12 @@ const events: Event[] = [
   },
 ];
 
+
 export default function Page() {
   return (
-    <div>
+    <div className="bg-muted-foreground ">
         <EventList events = {events} />
-    <CardDemo />
+        {/* <CardDemo /> */}
     </div>
   
   );

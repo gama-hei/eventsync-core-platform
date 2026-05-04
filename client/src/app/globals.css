@@ -48,7 +48,8 @@
   --radius-4xl: calc(var(--radius) * 2.6);
   --color-card-first-bg: var(--card-first-bg);
   --color-card-second-bg: var(--card-second-bg);
-  --color-card-last-bg: var(--card-last-bg)
+  --color-card-last-bg: var(--card-last-bg);
+  --color-input-placeholder:var(--input-placeholder);
 }
 
 :root {
@@ -87,6 +88,7 @@
   --card-first-bg : #3D37F1;
   --card-second-bg: #1E97C3;
   --card-last-bg:#353F4A;
+  --input-placeholder:#260404;
 }
 
 .dark {
