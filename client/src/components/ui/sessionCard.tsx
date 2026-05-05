@@ -64,6 +64,7 @@ export function SessionCards({ sessions = [] }: Props) {
           ({
             id,
             title,
+            
             description,
             startTime,
             endTime,
