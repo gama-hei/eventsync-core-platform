@@ -1,5 +1,5 @@
 import { CardDemo } from "@/components/ui/CardDemo";
-import EventList from "@/components/ui/eventCard";
+import EventList from "@/components/ui/eventLists";
 import { SessionCards } from "@/components/ui/sessionCard";
 import SessionList from "@/components/ui/sessionLists";
 import { Event, Session , Speaker} from "@/types/types";
