@@ -44,7 +44,7 @@ export function SessionCards({ sessions = [] }: Props) {
 
   return (
     <>
-      <div className="m-auto w-[40vw] pb-5">
+      <div className="m-auto w-[40vw] pb-5 ">
         <CardHeader className="w-full">
           <CardTitle className="text-4xl text-center text-background">
             Conference Schedule
@@ -73,7 +73,7 @@ export function SessionCards({ sessions = [] }: Props) {
             isLive = false,
           }) => (
             <div key={id}>
-              <div className="flex justify-between py-10 bg-card-bg-session w-[40vw] mx-auto px-4 text-background mb-4">
+              <div className="flex justify-between py-10 bg-card-bg-session w-[40vw] mx-auto px-4 text-background mb-4 cursor-pointer ">
                 <h1 className="flex items-center text-center font-bold">
                   {startTime.slice(11, 16)} - {endTime.slice(11, 16)}
                 </h1>
@@ -82,7 +82,7 @@ export function SessionCards({ sessions = [] }: Props) {
                   <CardDescription>{description}</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button type="button" className="bg-transparent">
+                  <Button type="button" className="bg-transparent cursor-pointer">
                     <Heart size={24} strokeWidth={1.5} />
                   </Button>
                   <Button type="button" className="bg-transparent">
@@ -98,7 +98,7 @@ export function SessionCards({ sessions = [] }: Props) {
       <div className="flex justify-around m-auto w-[40vw] pb-5">
         <Button
           type="button"
-          className="bg-blue-500 w-24"
+          className="bg-blue-500 w-24 cursor-pointer"
           onClick={handlePrevious}
           disabled={currentDateIndex === 0}
         >
@@ -107,7 +107,7 @@ export function SessionCards({ sessions = [] }: Props) {
         </Button>
         <Button
           type="button"
-          className="bg-blue-500 w-24"
+          className="bg-blue-500 w-24 cursor-pointer"
           onClick={handleNext}
           disabled={currentDateIndex === uniqueDates.length - 1}
         >
