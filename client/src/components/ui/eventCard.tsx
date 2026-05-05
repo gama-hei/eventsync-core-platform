@@ -1,7 +1,7 @@
 
-"use client"
-import React from 'react'
-import { SectionCards } from '@/components/ui/section-card'
+'use client'
+
+import { SectionCards } from '@/components/ui/eventDetails'
 import { Event } from '@/types/types';
 import { useState } from 'react';
 
@@ -9,7 +9,7 @@ interface Props {
     events : Event[];
 }
 export default function page({events} : Props) {
-     const [selectedId, setSelectedId] = useState("1");
+   const [selectedId, setSelectedId] = useState("1");
 
   const event = events.find((e) => e.id === selectedId);
   return (

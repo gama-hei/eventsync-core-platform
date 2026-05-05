@@ -50,6 +50,7 @@
   --color-card-second-bg: var(--card-second-bg);
   --color-card-last-bg: var(--card-last-bg);
   --color-input-placeholder:var(--input-placeholder);
+  --color-card-bg-session:var(--card-bg-session);
 }
 
 :root {
@@ -89,6 +90,7 @@
   --card-second-bg: #1E97C3;
   --card-last-bg:#353F4A;
   --input-placeholder:#260404;
+  --card-bg-session:#2D3640;
 }
 
 .dark {
