@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./button";
 import { Session } from "@/types/types";
 import {
@@ -41,10 +41,16 @@ export function SessionCards({ sessions = [] }: Props) {
   const handleNext = () => {
     setCurrentDateIndex((prev) => Math.min(prev + 1, uniqueDates.length - 1));
   };
+    const [mounted, setMounted] = useState(false); 
+
+  useEffect(() => {
+    setMounted(true); 
+  }, []);
+
 
   return (
     <>
-      <div className="m-auto w-[40vw] pb-5 ">
+      <div className="m-auto w-[40vw] pb-5 pt-20 ">
         <CardHeader className="w-full">
           <CardTitle className="text-4xl text-center text-background">
             Conference Schedule
@@ -101,7 +107,7 @@ export function SessionCards({ sessions = [] }: Props) {
           type="button"
           className="bg-blue-500 w-24 cursor-pointer"
           onClick={handlePrevious}
-          disabled={currentDateIndex === 0}
+          disabled={mounted && currentDateIndex === 0}
         >
           <ArrowLeft size={256} strokeWidth={50} absoluteStrokeWidth />
           Previous
@@ -110,7 +116,7 @@ export function SessionCards({ sessions = [] }: Props) {
           type="button"
           className="bg-blue-500 w-24 cursor-pointer"
           onClick={handleNext}
-          disabled={currentDateIndex === uniqueDates.length - 1}
+         disabled={mounted && currentDateIndex === uniqueDates.length - 1}
         >
           <span>Next</span>
           <ArrowRight size={256} strokeWidth={50} absoluteStrokeWidth />

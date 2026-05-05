@@ -139,7 +139,7 @@ export default function page({events} : Props) {
     <>
    
      <div  >
-          <div className="@container/main flex flex-1 flex-col gap-2 pb-20">
+          <div className="@container/main flex flex-1 flex-col gap-2 ">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                  {event ? (
         <EventCard event={event} />
