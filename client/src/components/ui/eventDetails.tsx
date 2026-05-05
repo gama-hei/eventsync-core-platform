@@ -14,8 +14,8 @@ import { Label } from "@/components/ui/label";
 
 interface Props {
   event: Event;
-  selectedEventId: string;        // 👈 ajouté
-  onSelectEvent: (id: string) => void; // 👈 ajouté
+  selectedEventId: string;        
+  onSelectEvent: (id: string) => void;
 }
 
 export function SectionCards({ event, selectedEventId, onSelectEvent }: Props) {
@@ -31,7 +31,7 @@ export function SectionCards({ event, selectedEventId, onSelectEvent }: Props) {
                 Event Start
               </CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                11:00 - 12:00
+              {startDate}
               </CardTitle>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -59,7 +59,7 @@ export function SectionCards({ event, selectedEventId, onSelectEvent }: Props) {
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
               <div className="line-clamp-1 flex gap-2 font-medium"></div>
-              <div>AXIAN ANDRAHARO</div>
+              <div>{location}</div>
             </CardFooter>
           </Card>
         </div>
@@ -67,10 +67,10 @@ export function SectionCards({ event, selectedEventId, onSelectEvent }: Props) {
           <Card
             className={`relative w-full max-w-sm pt-0 cursor-pointer transition-all duration-200 
               ${selectedEventId === id 
-                ? "ring-2 ring-blue-500 scale-[1.02]"  // 👈 style si sélectionné
+                ? "ring-2 ring-blue-500 scale-[1.02]"  
                 : "ring-1 ring-transparent hover:ring-blue-300"
               }`}
-            onClick={() => onSelectEvent(id)} // 👈 au clic, sélectionne l'event
+            onClick={() => onSelectEvent(id)} // 
           >
             <CardHeader className="text-background ">
               <CardTitle className="text-2xl">{title.toUpperCase()}</CardTitle>
@@ -132,7 +132,7 @@ export function SectionCards({ event, selectedEventId, onSelectEvent }: Props) {
                 </div>
               </form>
             </CardContent>
-            <Button type="submit" className="w-48 flex bg-green-600 m-auto">
+            <Button type="submit" className="w-48 flex bg-green-600 m-auto cursor-pointer">
               Register To Event
             </Button>
           </Card>
