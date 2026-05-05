@@ -46,6 +46,11 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-card-first-bg: var(--card-first-bg);
+  --color-card-second-bg: var(--card-second-bg);
+  --color-card-last-bg: var(--card-last-bg);
+  --color-input-placeholder:var(--input-placeholder);
+  --color-card-bg-session:var(--card-bg-session);
 }
 
 :root {
@@ -81,6 +86,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --card-first-bg : #3D37F1;
+  --card-second-bg: #1E97C3;
+  --card-last-bg:#353F4A;
+  --input-placeholder:#260404;
+  --card-bg-session:#2D3640;
 }
 
 .dark {
