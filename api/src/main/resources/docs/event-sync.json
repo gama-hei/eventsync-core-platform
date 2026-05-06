@@ -1,0 +1,560 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "EventSync API Tests",
+  "dateExported": "2026-05-02T12:00:00.000Z",
+  "version": "1.2",
+  "folders": [
+    {
+      "name": "Auth",
+      "requests": [
+        {
+          "name": "Login (Organizer)",
+          "method": "POST",
+          "url": "http://localhost:8080/auth/organizer/login",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"email\": \"organizer@eventsync.com\",\n  \"password\": \"Organizer123!\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            },
+            {
+              "type": "set-var",
+              "custom": "const body = pm.response.json();\npm.collectionVariables.set('token', body.token);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "requests": [
+        {
+          "name": "List Events",
+          "method": "GET",
+          "url": "http://localhost:8080/api/events",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Get Event",
+          "method": "GET",
+          "url": "http://localhost:8080/api/events/{{eventId}}",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "requests": [
+        {
+          "name": "List Sessions",
+          "method": "GET",
+          "url": "http://localhost:8080/api/sessions",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Get Live Sessions",
+          "method": "GET",
+          "url": "http://localhost:8080/api/sessions/live",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Get Session",
+          "method": "GET",
+          "url": "http://localhost:8080/api/sessions/{{sessionId}}",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "requests": [
+        {
+          "name": "List Rooms",
+          "method": "GET",
+          "url": "http://localhost:8080/api/rooms",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Get Room Sessions",
+          "method": "GET",
+          "url": "http://localhost:8080/api/rooms/{{roomId}}/sessions",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Speakers",
+      "requests": [
+        {
+          "name": "List Speakers",
+          "method": "GET",
+          "url": "http://localhost:8080/api/speakers",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Get Speaker",
+          "method": "GET",
+          "url": "http://localhost:8080/api/speakers/{{speakerId}}",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Questions",
+      "requests": [
+        {
+          "name": "Get Session Questions",
+          "method": "GET",
+          "url": "http://localhost:8080/api/sessions/{{sessionId}}/questions",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Create Question",
+          "method": "POST",
+          "url": "http://localhost:8080/api/sessions/{{sessionId}}/questions",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"content\": \"Quelle est la durée prévue ?\",\n  \"authorName\": \"Jean Dupont\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(201);"
+            }
+          ]
+        },
+        {
+          "name": "Upvote Question",
+          "method": "POST",
+          "url": "http://localhost:8080/api/questions/{{questionId}}/upvote",
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Events",
+      "requests": [
+        {
+          "name": "Create Event",
+          "method": "POST",
+          "url": "http://localhost:8080/admin/events",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Conférence Test\",\n  \"description\": \"Événement de démonstration\",\n  \"startDate\": \"2026-06-15T09:00:00\",\n  \"endDate\": \"2026-06-16T18:00:00\",\n  \"location\": \"Paris\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(201);"
+            },
+            {
+              "type": "set-var",
+              "custom": "const body = pm.response.json();\npm.collectionVariables.set('eventId', body.id);"
+            }
+          ]
+        },
+        {
+          "name": "Update Event",
+          "method": "PUT",
+          "url": "http://localhost:8080/admin/events/{{eventId}}",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Conférence Renommée\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Delete Event",
+          "method": "DELETE",
+          "url": "http://localhost:8080/admin/events/{{eventId}}",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(204);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Sessions",
+      "requests": [
+        {
+          "name": "Create Session",
+          "method": "POST",
+          "url": "http://localhost:8080/admin/events/{{eventId}}/sessions",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Atelier Spring Boot\",\n  \"description\": \"Apprendre les bases\",\n  \"startTime\": \"2026-06-15T10:00:00\",\n  \"endTime\": \"2026-06-15T12:00:00\",\n  \"roomId\": \"{{roomId}}\",\n  \"capacity\": 30,\n  \"speakerIds\": [\"{{speakerId}}\"]\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(201);"
+            },
+            {
+              "type": "set-var",
+              "custom": "const body = pm.response.json();\npm.collectionVariables.set('sessionId', body.id);"
+            }
+          ]
+        },
+        {
+          "name": "Update Session",
+          "method": "PUT",
+          "url": "http://localhost:8080/admin/sessions/{{sessionId}}",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Atelier avancé\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Assign Speakers to Session",
+          "method": "PATCH",
+          "url": "http://localhost:8080/admin/sessions/{{sessionId}}/speakers",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"speakerIds\": [\"{{speakerId}}\"]\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Delete Session",
+          "method": "DELETE",
+          "url": "http://localhost:8080/admin/sessions/{{sessionId}}",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(204);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Rooms",
+      "requests": [
+        {
+          "name": "Create Room",
+          "method": "POST",
+          "url": "http://localhost:8080/admin/rooms",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Salle A\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(201);"
+            },
+            {
+              "type": "set-var",
+              "custom": "const body = pm.response.json();\npm.collectionVariables.set('roomId', body.id);"
+            }
+          ]
+        },
+        {
+          "name": "Update Room",
+          "method": "PUT",
+          "url": "http://localhost:8080/admin/rooms/{{roomId}}",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Salle B\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Delete Room",
+          "method": "DELETE",
+          "url": "http://localhost:8080/admin/rooms/{{roomId}}",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(204);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Speakers",
+      "requests": [
+        {
+          "name": "Create Speaker",
+          "method": "POST",
+          "url": "http://localhost:8080/admin/speakers",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"fullName\": \"Dr. Alice Martin\",\n  \"bio\": \"Experte en cybersécurité\",\n  \"externalLinks\": [\"https://twitter.com/alice\"]\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(201);"
+            },
+            {
+              "type": "set-var",
+              "custom": "const body = pm.response.json();\npm.collectionVariables.set('speakerId', body.id);"
+            }
+          ]
+        },
+        {
+          "name": "Update Speaker",
+          "method": "PUT",
+          "url": "http://localhost:8080/admin/speakers/{{speakerId}}",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"bio\": \"Nouvelle bio\"\n}"
+          },
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(200);"
+            }
+          ]
+        },
+        {
+          "name": "Delete Speaker",
+          "method": "DELETE",
+          "url": "http://localhost:8080/admin/speakers/{{speakerId}}",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "tests": [
+            {
+              "type": "res-code",
+              "custom": "pm.response.to.have.status(204);"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "token",
+      "value": ""
+    },
+    {
+      "name": "eventId",
+      "value": ""
+    },
+    {
+      "name": "sessionId",
+      "value": ""
+    },
+    {
+      "name": "roomId",
+      "value": ""
+    },
+    {
+      "name": "speakerId",
+      "value": ""
+    },
+    {
+      "name": "questionId",
+      "value": ""
+    }
+  ]
+}
