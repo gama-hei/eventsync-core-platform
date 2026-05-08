@@ -19,18 +19,18 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/sessions/{sessionId}/questions")
-    public ResponseEntity<List<QuestionResponse>> getSessionQuestions(@PathVariable UUID sessionId) {
-        return ResponseEntity.ok(questionService.getSessionQuestions(sessionId));
+    public ResponseEntity<List<QuestionResponse>> getSessionQuestions(@PathVariable String sessionId) {
+        return ResponseEntity.ok(questionService.getSessionQuestions(UUID.fromString(sessionId)));
     }
 
     @PostMapping("/sessions/{sessionId}/questions")
-    public ResponseEntity<QuestionResponse> createQuestion(@PathVariable UUID sessionId,
+    public ResponseEntity<QuestionResponse> createQuestion(@PathVariable String sessionId,
                                                            @Valid @RequestBody CreateQuestionRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(sessionId, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(UUID.fromString(sessionId), request));
     }
 
     @PostMapping("/questions/{questionId}/upvote")
-    public ResponseEntity<QuestionResponse> upvoteQuestion(@PathVariable UUID questionId) {
-        return ResponseEntity.ok(questionService.upvoteQuestion(questionId));
+    public ResponseEntity<QuestionResponse> upvoteQuestion(@PathVariable String questionId) {
+        return ResponseEntity.ok(questionService.upvoteQuestion(UUID.fromString(questionId)));
     }
 }

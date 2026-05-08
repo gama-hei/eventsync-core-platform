@@ -8,7 +8,6 @@ import school.hei.event_sync.dto.response.SessionResponse;
 import school.hei.event_sync.service.SessionService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/sessions")
@@ -19,9 +18,9 @@ public class SessionController {
 
     @GetMapping
     public ResponseEntity<List<SessionResponse>> listSessions(
-            @RequestParam(required = false) UUID eventId,
-            @RequestParam(required = false) UUID roomId,
-            @RequestParam(required = false) UUID speakerId,
+            @RequestParam(required = false) String eventId,
+            @RequestParam(required = false) String roomId,
+            @RequestParam(required = false) String speakerId,
             @RequestParam(required = false) Boolean live) {
         return ResponseEntity.ok(sessionService.listSessions(eventId, roomId, speakerId, live));
     }
@@ -32,7 +31,7 @@ public class SessionController {
     }
 
     @GetMapping("/{sessionId}")
-    public ResponseEntity<SessionResponse> getSession(@PathVariable UUID sessionId) {
+    public ResponseEntity<SessionResponse> getSession(@PathVariable String sessionId) {
         return ResponseEntity.ok(sessionService.getSessionById(sessionId));
     }
 }

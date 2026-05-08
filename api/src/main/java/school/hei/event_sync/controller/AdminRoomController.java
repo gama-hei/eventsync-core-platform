@@ -10,7 +10,7 @@ import school.hei.event_sync.dto.request.UpdateRoomRequest;
 import school.hei.event_sync.dto.response.RoomResponse;
 import school.hei.event_sync.service.RoomService;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/rooms")
@@ -19,19 +19,29 @@ public class AdminRoomController {
 
     private final RoomService roomService;
 
+    @GetMapping
+    public ResponseEntity<List<RoomResponse>> getAllRooms() {
+        return ResponseEntity.ok(roomService.listRooms());
+    }
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<RoomResponse> getRoomById(@PathVariable String roomId) {
+        return ResponseEntity.ok(roomService.getRoomById(roomId));
+    }
+
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody CreateRoomRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.createRoom(request));
     }
 
     @PutMapping("/{roomId}")
-    public ResponseEntity<RoomResponse> updateRoom(@PathVariable UUID roomId,
+    public ResponseEntity<RoomResponse> updateRoom(@PathVariable String roomId,
                                                    @Valid @RequestBody UpdateRoomRequest request) {
         return ResponseEntity.ok(roomService.updateRoom(roomId, request));
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable UUID roomId) {
+    public ResponseEntity<Void> deleteRoom(@PathVariable String roomId) {
         roomService.deleteRoom(roomId);
         return ResponseEntity.noContent().build();
     }

@@ -14,7 +14,6 @@ import school.hei.event_sync.utils.DateUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,19 @@ public class SessionService {
     private final RoomRepository roomRepository;
     private final SpeakerRepository speakerRepository;
 
-    public List<SessionResponse> listSessions(UUID eventId, UUID roomId, UUID speakerId, Boolean live) {
+    public List<SessionResponse> getAllSessions() {
+        return sessionRepository.findAll().stream()
+                .map(this::toSessionResponse)
+                .toList();
+    }
+
+    public List<SessionResponse> getSessionsByEvent(String eventId) {
+        return sessionRepository.findByEvent_Id(eventId).stream()
+                .map(this::toSessionResponse)
+                .toList();
+    }
+
+    public List<SessionResponse> listSessions(String eventId, String roomId, String speakerId, Boolean live) {
         List<Session> sessions;
         if (live != null && live) {
             Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -48,26 +59,25 @@ public class SessionService {
         return live.stream().map(this::toLiveSessionResponse).toList();
     }
 
-    public SessionResponse getSessionById(UUID id) {
+    public SessionResponse getSessionById(String id) {
         Session session = sessionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + id));
         return toSessionResponse(session);
     }
 
     @Transactional
-    public SessionResponse createSession(UUID eventId, CreateSessionRequest request) {
+    public SessionResponse createSession(String eventId, CreateSessionRequest request) {
         eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
-        roomRepository.findById(UUID.fromString(request.getRoomId()))
+        roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new EntityNotFoundException("Room not found: " + request.getRoomId()));
 
         Session session = toSessionEntity(request);
         session.setEvent(eventRepository.getReferenceById(eventId));
-        session.setRoom(roomRepository.getReferenceById(UUID.fromString(request.getRoomId())));
+        session.setRoom(roomRepository.getReferenceById(request.getRoomId()));
 
         if (request.getSpeakerIds() != null && !request.getSpeakerIds().isEmpty()) {
-            List<Speaker> speakers = speakerRepository.findAllById(
-                    request.getSpeakerIds().stream().map(UUID::fromString).toList());
+            List<Speaker> speakers = speakerRepository.findAllById(request.getSpeakerIds());
             speakers.forEach(session::addSpeaker);
         }
 
@@ -76,15 +86,15 @@ public class SessionService {
     }
 
     @Transactional
-    public SessionResponse updateSession(UUID sessionId, UpdateSessionRequest request) {
+    public SessionResponse updateSession(String sessionId, UpdateSessionRequest request) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + sessionId));
         applyUpdateRequest(request, session);
 
         if (request.getRoomId() != null) {
-            roomRepository.findById(UUID.fromString(request.getRoomId()))
+            roomRepository.findById(request.getRoomId())
                     .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-            session.setRoom(roomRepository.getReferenceById(UUID.fromString(request.getRoomId())));
+            session.setRoom(roomRepository.getReferenceById(request.getRoomId()));
         }
 
         session = sessionRepository.save(session);
@@ -92,7 +102,7 @@ public class SessionService {
     }
 
     @Transactional
-    public void deleteSession(UUID sessionId) {
+    public void deleteSession(String sessionId) {
         if (!sessionRepository.existsById(sessionId)) {
             throw new EntityNotFoundException("Session not found: " + sessionId);
         }
@@ -100,11 +110,10 @@ public class SessionService {
     }
 
     @Transactional
-    public SessionResponse assignSpeakers(UUID sessionId, AssignSpeakersRequest request) {
+    public SessionResponse assignSpeakers(String sessionId, AssignSpeakersRequest request) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + sessionId));
-        List<Speaker> speakers = speakerRepository.findAllById(
-                request.getSpeakerIds().stream().map(UUID::fromString).toList());
+        List<Speaker> speakers = speakerRepository.findAllById(request.getSpeakerIds());
         session.getSpeakers().clear();
         speakers.forEach(session::addSpeaker);
         sessionRepository.save(session);
@@ -134,37 +143,23 @@ public class SessionService {
         return dto;
     }
 
-    private SessionSummary toSessionSummary(Session session) {
-        SessionSummary summary = new SessionSummary();
-        summary.setId(session.getId());
-        summary.setTitle(session.getTitle());
-        summary.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
-        summary.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
-        summary.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
-        summary.setCapacity(session.getCapacity());
-        summary.setEventId(session.getEvent() != null ? session.getEvent().getId() : null);
-        return summary;
-    }
-
     private LiveSessionResponse toLiveSessionResponse(Session session) {
         LiveSessionResponse dto = new LiveSessionResponse();
         dto.setId(session.getId());
         dto.setTitle(session.getTitle());
         dto.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
         dto.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
-        dto.setRoom(session.getRoom() != null ? toRoomResponse(session.getRoom()) : null);
+        if (session.getRoom() != null) {
+            RoomResponse roomResponse = new RoomResponse();
+            roomResponse.setId(session.getRoom().getId());
+            roomResponse.setName(session.getRoom().getName());
+            dto.setRoom(roomResponse);
+        }
         if (session.getSpeakers() != null) {
             dto.setSpeakers(session.getSpeakers().stream()
                     .map(this::toSpeakerSummary)
                     .toList());
         }
-        return dto;
-    }
-
-    private RoomResponse toRoomResponse(Room room) {
-        RoomResponse dto = new RoomResponse();
-        dto.setId(room.getId());
-        dto.setName(room.getName());
         return dto;
     }
 

@@ -7,7 +7,6 @@ import school.hei.event_sync.dto.response.EventResponse;
 import school.hei.event_sync.service.EventService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/events")
@@ -22,7 +21,7 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventResponse> getEvent(@PathVariable UUID eventId) {
+    public ResponseEntity<EventResponse> getEvent(@PathVariable String eventId) {
         return ResponseEntity.ok(eventService.getEventById(eventId));
     }
 }

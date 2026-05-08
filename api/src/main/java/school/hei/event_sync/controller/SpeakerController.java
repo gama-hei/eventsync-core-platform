@@ -7,7 +7,6 @@ import school.hei.event_sync.dto.response.SpeakerResponse;
 import school.hei.event_sync.service.SpeakerService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/speakers")
@@ -22,7 +21,7 @@ public class SpeakerController {
     }
 
     @GetMapping("/{speakerId}")
-    public ResponseEntity<SpeakerResponse> getSpeaker(@PathVariable UUID speakerId) {
+    public ResponseEntity<SpeakerResponse> getSpeaker(@PathVariable String speakerId) {
         return ResponseEntity.ok(speakerService.getSpeakerById(speakerId));
     }
 }
