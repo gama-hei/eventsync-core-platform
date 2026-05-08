@@ -32,51 +32,33 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-//    AUTH MANAGER
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration
-            ) throws Exception {
-        return  configuration.getAuthenticationManager();
+    ) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
-//    PASSWORD ENCODER
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    JWT FILTER
     @Bean
-    JwtAuthenticationFilter jwtAuthenticationFilter() {
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(userDetailsService, jwtUtil);
     }
 
-//    CORS CONFIGURATION
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "http://localhost:4200",
-                "http://192.168.1.108:5173",
-                "http://192.168.28.38:5173"
+                "http://localhost:4200"
         ));
-
-        configuration.setAllowedMethods(List.of(
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS",
-                "PATCH"
-        ));
-
-        configuration.setAllowedHeaders(List.of(
-                "*"
-        ));
-
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -84,14 +66,13 @@ public class SecurityConfig {
         return source;
     }
 
-//    SECURITY FILTER CHAIN
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests( auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/organizer/login",
                                 "/api/events/**",
@@ -105,12 +86,10 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers(
-                                "/admin/events/**",
-                                "/admin/sessions/**",
-                                "/admin/rooms/**",
-                                "/admin/speakers/**"
+                                "/admin/**"
                         ).authenticated()
-                        .anyRequest().authenticated()
+
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
