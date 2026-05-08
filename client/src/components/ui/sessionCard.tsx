@@ -51,12 +51,12 @@ export function SessionCards({ sessions = [] }: Props) {
 
   return (
     <>
-      <div className="m-auto w-[40vw] pb-5 pt-20 ">
+      <div className="mx-auto  max-w-md overflow-hidden pb-5 pt-5 sm:pt-20 md:max-w-2xl ">
         <CardHeader className="w-full">
-          <CardTitle className="text-4xl text-center text-background">
-            Conference Schedule
+          <CardTitle className=" text-xl sm:text-4xl text-center sm:text-center text-background ">
+            <h1 className="sm:text-center"> Conference Schedule</h1> 
           </CardTitle>
-          <CardDescription>
+          <CardDescription className=" w-full flex justfiy-center text-center">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mollis
             quam malesuada scelerisque ultrices gravida
           </CardDescription>
@@ -80,14 +80,14 @@ export function SessionCards({ sessions = [] }: Props) {
             speakers,
             isLive = false,
           }) => (
-            <div key={id}>
-              <div className="flex justify-between py-10 bg-card-bg-session w-[40vw] mx-auto px-4 text-background mb-4 cursor-pointer ">
+            <div key={id} className="flex overflow-hidden  justify-between py-10 bg-card-bg-session lg:w-[40vw] gap-4 mx-auto px-4 text-background mb-4 cursor-pointer ">
+           
                 <h1 className="flex items-center text-center font-bold">
                   {startTime.slice(11, 16)} - {endTime.slice(11, 16)}
                 </h1>
                 <div className="grid grid-col-2 w-96">
-                  <CardTitle className="text-xl font-bold">{title}</CardTitle>
-                  <CardDescription>{description}</CardDescription>
+                  <CardTitle className="text-sm font-bold lg:text-2xl">{title}</CardTitle>
+                  <CardDescription className="text-[10px] lg:text-[15px]">{description}</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button type="button" className="bg-transparent cursor-pointer">
@@ -97,7 +97,7 @@ export function SessionCards({ sessions = [] }: Props) {
                     {isLive && <Radio className="text-red-500" />}
                   </Button>
                 </div>
-              </div>
+            
             </div>
           )
         )}
