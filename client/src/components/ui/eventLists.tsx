@@ -2,7 +2,7 @@
 'use client'
 
 import { EventCard} from '@/components/ui/eventCard'
-import { Event } from '@/types/types';
+
 import { useState } from 'react';
 import SessionList from "@/components/ui/sessionLists";
 import { Event, Session , Speaker} from "@/types/types";
@@ -132,7 +132,7 @@ const sessions: Session[] = [
   },
 ];
 export default function page({events} : Props) {
-   const [selectedId, setSelectedId] = useState("1");
+   const [selectedId, setSelectedId] = useState(events[0]?.id ?? "1");
 
   const event = events.find((e) => e.id === selectedId);
   return (
@@ -142,13 +142,16 @@ export default function page({events} : Props) {
           <div className="@container/main flex flex-1 flex-col gap-2 ">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                  {event ? (
-        <EventCard event={event} />
+        <EventCard event={event}
+                selectedEventId={selectedId}       
+                onSelectEvent={setSelectedId}  />
       ) : (
         <p>No event found</p>
       )}
              
             </div>
-            <SessionList sessions={sessions}/>
+            <SessionList  sessions={sessions}
+            selectedEventId={selectedId} />
           </div>
         </div>
         

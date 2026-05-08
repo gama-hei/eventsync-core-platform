@@ -24,7 +24,7 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
   return (
     <>
       <div className="grid grid-col-3 gap-20">
-        <div className="flex flex-row justify-center   m-auto gap-10 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+        <div className="grid grid-coli-3 justify-center sm:flex  m-auto gap-10 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
           <Card className="@container/card w-64 bg-card-first-bg ">
             <CardHeader>
               <CardDescription className="text-background">
@@ -63,14 +63,10 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
             </CardFooter>
           </Card>
         </div>
-        <div className="flex flex-row justify-center gap-10 ">
+        <div className="grid grid-col-2 sm:flex justify-center gap-10 ">
           <Card
-            className={`relative w-full max-w-sm pt-0 cursor-pointer transition-all duration-200 
-              ${selectedEventId === id 
-                ? "ring-2 ring-blue-500 scale-[1.02]"  
-                : "ring-1 ring-transparent hover:ring-blue-300"
-              }`}
-            onClick={() => onSelectEvent(id)} // 
+            className="relative w-full max-w-sm pt-0 cursor-pointer transition-all duration-200"
+           
           >
             <CardHeader className="text-background ">
               <CardTitle className="text-2xl">{title.toUpperCase()}</CardTitle>
@@ -98,11 +94,11 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
               <form>
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">FullName</Label>
+                    <Label htmlFor="text">FullName</Label>
                     <Input
                       className="bg-foreground/10 border-none placeholder:text-input-placeholder"
-                      id="email"
-                      type="email"
+                      id="fullName"
+                      type="text"
                       placeholder="Enter Your fullname"
                       required
                     />

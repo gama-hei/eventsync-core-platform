@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, Heart, Radio } from "lucide-react";
 
 interface Props {
   sessions: Session[];
+  selectedEventId: string;
 }
 
 const formatDate = (dateStr: string) => {
