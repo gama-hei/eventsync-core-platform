@@ -17,7 +17,7 @@ import school.hei.event_sync.utils.DateUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +29,10 @@ public class SpeakerService {
     public List<SpeakerResponse> listSpeakers() {
         return speakerRepository.findAll().stream()
                 .map(this::toSpeakerResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    public SpeakerResponse getSpeakerById(UUID id) {
+    public SpeakerResponse getSpeakerById(String id) {
         Speaker speaker = speakerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Speaker not found: " + id));
         return toSpeakerResponse(speaker);
@@ -41,6 +41,7 @@ public class SpeakerService {
     @Transactional
     public SpeakerResponse createSpeaker(CreateSpeakerRequest request) {
         Speaker speaker = toSpeakerEntity(request);
+
         if (request.getExternalLinks() != null && !request.getExternalLinks().isEmpty()) {
             for (String url : request.getExternalLinks()) {
                 SpeakerLink link = new SpeakerLink();
@@ -48,14 +49,16 @@ public class SpeakerService {
                 speaker.addLink(link);
             }
         }
+
         speaker = speakerRepository.save(speaker);
         return toSpeakerResponse(speaker);
     }
 
     @Transactional
-    public SpeakerResponse updateSpeaker(UUID speakerId, UpdateSpeakerRequest request) {
+    public SpeakerResponse updateSpeaker(String speakerId, UpdateSpeakerRequest request) {
         Speaker speaker = speakerRepository.findById(speakerId)
                 .orElseThrow(() -> new EntityNotFoundException("Speaker not found: " + speakerId));
+
         applyUpdateRequest(request, speaker);
 
         if (request.getExternalLinks() != null) {
@@ -67,35 +70,38 @@ public class SpeakerService {
                 speaker.addLink(link);
             }
         }
+
         speaker = speakerRepository.save(speaker);
         return toSpeakerResponse(speaker);
     }
 
     @Transactional
-    public void deleteSpeaker(UUID speakerId) {
+    public void deleteSpeaker(String speakerId) {
         if (!speakerRepository.existsById(speakerId)) {
             throw new EntityNotFoundException("Speaker not found: " + speakerId);
         }
         speakerRepository.deleteById(speakerId);
     }
 
-    // ---------- Conversions ----------
     private SpeakerResponse toSpeakerResponse(Speaker speaker) {
         SpeakerResponse dto = new SpeakerResponse();
         dto.setId(speaker.getId());
         dto.setFullName(speaker.getFullName());
         dto.setProfilePicture(speaker.getProfilePicture());
         dto.setBio(speaker.getBio());
+
         if (speaker.getLinks() != null) {
             dto.setExternalLinks(speaker.getLinks().stream()
                     .map(SpeakerLink::getLinkUrl)
-                    .toList());
+                    .collect(Collectors.toList()));
         }
+
         if (speaker.getSessions() != null) {
             dto.setSessions(speaker.getSessions().stream()
                     .map(this::toSessionSummary)
-                    .toList());
+                    .collect(Collectors.toList()));
         }
+
         return dto;
     }
 
@@ -127,8 +133,14 @@ public class SpeakerService {
     }
 
     private void applyUpdateRequest(UpdateSpeakerRequest request, Speaker speaker) {
-        if (request.getFullName() != null) speaker.setFullName(request.getFullName());
-        if (request.getProfilePicture() != null) speaker.setProfilePicture(request.getProfilePicture());
-        if (request.getBio() != null) speaker.setBio(request.getBio());
+        if (request.getFullName() != null) {
+            speaker.setFullName(request.getFullName());
+        }
+        if (request.getProfilePicture() != null) {
+            speaker.setProfilePicture(request.getProfilePicture());
+        }
+        if (request.getBio() != null) {
+            speaker.setBio(request.getBio());
+        }
     }
 }

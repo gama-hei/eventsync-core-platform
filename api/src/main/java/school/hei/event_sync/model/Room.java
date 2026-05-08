@@ -21,6 +21,10 @@ public class Room {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
+    private Integer capacity;
+
+    private String location;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;

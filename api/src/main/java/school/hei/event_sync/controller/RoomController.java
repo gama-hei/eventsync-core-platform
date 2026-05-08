@@ -8,7 +8,6 @@ import school.hei.event_sync.dto.response.RoomSessionsResponse;
 import school.hei.event_sync.service.RoomService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/rooms")
@@ -23,7 +22,7 @@ public class RoomController {
     }
 
     @GetMapping("/{roomId}/sessions")
-    public ResponseEntity<RoomSessionsResponse> getRoomSessions(@PathVariable UUID roomId) {
+    public ResponseEntity<RoomSessionsResponse> getRoomSessions(@PathVariable String roomId) {
         return ResponseEntity.ok(roomService.getRoomSessions(roomId));
     }
 }

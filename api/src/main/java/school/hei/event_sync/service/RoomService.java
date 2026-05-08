@@ -7,20 +7,19 @@ import school.hei.event_sync.dto.request.CreateRoomRequest;
 import school.hei.event_sync.dto.request.UpdateRoomRequest;
 import school.hei.event_sync.dto.response.RoomResponse;
 import school.hei.event_sync.dto.response.RoomSessionsResponse;
-import school.hei.event_sync.dto.response.SessionSummary;
+import school.hei.event_sync.dto.response.SessionResponse;
 import school.hei.event_sync.model.Room;
 import school.hei.event_sync.model.Session;
 import school.hei.event_sync.repository.RoomRepository;
 import school.hei.event_sync.repository.SessionRepository;
-import school.hei.event_sync.utils.DateUtils;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -28,74 +27,105 @@ public class RoomService {
 
     public List<RoomResponse> listRooms() {
         return roomRepository.findAll().stream()
-                .map(this::toRoomResponse)
-                .toList();
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    public RoomSessionsResponse getRoomSessions(UUID roomId) {
+    public RoomResponse getRoomById(String roomId) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found: " + roomId));
-        List<Session> sessions = sessionRepository.findByRoom_Id(roomId);
-        RoomSessionsResponse response = new RoomSessionsResponse();
-        response.setRoom(toRoomResponse(room));
-        response.setSessions(sessions.stream().map(this::toSessionSummary).toList());
-        return response;
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id: " + roomId));
+        return mapToResponse(room);
     }
 
-    @Transactional
     public RoomResponse createRoom(CreateRoomRequest request) {
         if (roomRepository.existsByName(request.getName())) {
-            throw new EntityExistsException("Room with name '" + request.getName() + "' already exists");
+            throw new IllegalStateException("Room with name " + request.getName() + " already exists");
         }
-        Room room = toRoomEntity(request);
-        room = roomRepository.save(room);
-        return toRoomResponse(room);
+
+        Room room = new Room();
+        room.setName(request.getName());
+        room.setCapacity(request.getCapacity());
+        room.setLocation(request.getLocation());
+
+        Room savedRoom = roomRepository.save(room);
+        return mapToResponse(savedRoom);
     }
 
-    @Transactional
-    public RoomResponse updateRoom(UUID roomId, UpdateRoomRequest request) {
+    public RoomResponse updateRoom(String roomId, UpdateRoomRequest request) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found: " + roomId));
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id: " + roomId));
+
         if (request.getName() != null && !request.getName().equals(room.getName())) {
             if (roomRepository.existsByName(request.getName())) {
-                throw new EntityExistsException("Room name already taken");
+                throw new IllegalStateException("Room with name " + request.getName() + " already exists");
             }
             room.setName(request.getName());
         }
-        room = roomRepository.save(room);
-        return toRoomResponse(room);
-    }
 
-    @Transactional
-    public void deleteRoom(UUID roomId) {
-        if (!roomRepository.existsById(roomId)) {
-            throw new EntityNotFoundException("Room not found: " + roomId);
+        if (request.getCapacity() != null) {
+            room.setCapacity(request.getCapacity());
         }
-        roomRepository.deleteById(roomId);
+
+        if (request.getLocation() != null) {
+            room.setLocation(request.getLocation());
+        }
+
+        Room updatedRoom = roomRepository.save(room);
+        return mapToResponse(updatedRoom);
     }
 
-    private RoomResponse toRoomResponse(Room room) {
-        RoomResponse dto = new RoomResponse();
-        dto.setId(room.getId());
-        dto.setName(room.getName());
-        return dto;
+    public void deleteRoom(String roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id: " + roomId));
+
+        List<Session> sessions = sessionRepository.findByRoom_Id(roomId);
+        if (!sessions.isEmpty()) {
+            throw new IllegalStateException("Cannot delete room with existing sessions");
+        }
+
+        roomRepository.delete(room);
     }
 
-    private SessionSummary toSessionSummary(Session session) {
-        SessionSummary summary = new SessionSummary();
-        summary.setId(session.getId());
-        summary.setTitle(session.getTitle());
-        summary.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
-        summary.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
-        summary.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
-        summary.setCapacity(session.getCapacity());
-        summary.setEventId(session.getEvent() != null ? session.getEvent().getId() : null);
-        return summary;
+    public RoomSessionsResponse getRoomSessions(String roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id: " + roomId));
+
+        List<Session> sessions = sessionRepository.findByRoom_Id(roomId);
+
+        sessions.sort((s1, s2) -> s1.getStartTime().compareTo(s2.getStartTime()));
+
+        List<SessionResponse> sessionResponses = sessions.stream()
+                .map(this::mapSessionToResponse)
+                .collect(Collectors.toList());
+
+        RoomSessionsResponse response = new RoomSessionsResponse();
+        response.setRoomId(room.getId());
+        response.setRoomName(room.getName());
+        response.setCapacity(room.getCapacity());
+        response.setLocation(room.getLocation());
+        response.setSessions(sessionResponses);
+
+        return response;
     }
 
-    private Room toRoomEntity(CreateRoomRequest request) {
-        Room room = new Room();
-        room.setName(request.getName());
-        return room;
+    private RoomResponse mapToResponse(Room room) {
+        RoomResponse response = new RoomResponse();
+        response.setId(room.getId());
+        response.setName(room.getName());
+        response.setCapacity(room.getCapacity());
+        response.setLocation(room.getLocation());
+        return response;
+    }
+
+    private SessionResponse mapSessionToResponse(Session session) {
+        SessionResponse response = new SessionResponse();
+        response.setId(session.getId());
+        response.setTitle(session.getTitle());
+        response.setDescription(session.getDescription());
+        response.setStartTime(session.getStartTime().toLocalDateTime());
+        response.setEndTime(session.getEndTime().toLocalDateTime());
+        response.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
+        response.setRoomName(session.getRoom() != null ? session.getRoom().getName() : null);
+        return response;
     }
 }
