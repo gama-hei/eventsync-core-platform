@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import school.hei.event_sync.model.Organizer;
 import school.hei.event_sync.repository.OrganizerRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -20,6 +18,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Organizer organizer = organizerRepository.findByEmail(email);
+
+        if (organizer == null) {
+            throw new UsernameNotFoundException("Organizer not found with email: " + email);
+        }
 
         return User
                 .builder()
