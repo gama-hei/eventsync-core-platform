@@ -1,15 +1,15 @@
 package school.hei.event_sync.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomResponse {
     private String id;
     private String name;
+    private Integer capacity;
+    private String location;
 }

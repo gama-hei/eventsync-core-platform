@@ -14,7 +14,6 @@ import school.hei.event_sync.utils.DateUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class EventService {
                 .toList();
     }
 
-    public EventResponse getEventById(UUID id) {
+    public EventResponse getEventById(String id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + id));
         return toEventResponse(event);
@@ -43,7 +42,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponse updateEvent(UUID id, UpdateEventRequest request) {
+    public EventResponse updateEvent(String id, UpdateEventRequest request) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + id));
         applyUpdateRequest(request, event);
@@ -52,7 +51,7 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteEvent(UUID id) {
+    public void deleteEvent(String id) {
         if (!eventRepository.existsById(id)) {
             throw new EntityNotFoundException("Event not found: " + id);
         }

@@ -10,7 +10,7 @@ import school.hei.event_sync.dto.request.UpdateEventRequest;
 import school.hei.event_sync.dto.response.EventResponse;
 import school.hei.event_sync.service.EventService;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/events")
@@ -19,19 +19,29 @@ public class AdminEventController {
 
     private final EventService eventService;
 
+    @GetMapping
+    public ResponseEntity<List<EventResponse>> getAllEvents() {
+        return ResponseEntity.ok(eventService.listEvents());
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventResponse> getEventById(@PathVariable String eventId) {
+        return ResponseEntity.ok(eventService.getEventById(eventId));
+    }
+
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(request));
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID eventId,
+    public ResponseEntity<EventResponse> updateEvent(@PathVariable String eventId,
                                                      @Valid @RequestBody UpdateEventRequest request) {
         return ResponseEntity.ok(eventService.updateEvent(eventId, request));
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable UUID eventId) {
+    public ResponseEntity<Void> deleteEvent(@PathVariable String eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();
     }

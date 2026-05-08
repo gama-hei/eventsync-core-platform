@@ -1,16 +1,20 @@
 package school.hei.event_sync.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomSessionsResponse {
-    private RoomResponse room;
-    private List<SessionSummary> sessions;
+    private String roomId;
+    private String roomName;
+    private Integer capacity;
+    private String location;
+    private List<SessionResponse> sessions;
 }

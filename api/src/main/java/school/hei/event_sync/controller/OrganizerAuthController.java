@@ -31,7 +31,6 @@ public class OrganizerAuthController {
             );
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)

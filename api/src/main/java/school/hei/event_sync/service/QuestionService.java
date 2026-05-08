@@ -24,7 +24,7 @@ public class QuestionService {
     private final SessionRepository sessionRepository;
 
     public List<QuestionResponse> getSessionQuestions(UUID sessionId) {
-        if (!sessionRepository.existsById(sessionId)) {
+        if (!sessionRepository.existsById(String.valueOf(sessionId))) {
             throw new EntityNotFoundException("Session not found: " + sessionId);
         }
         return questionRepository.findBySession_IdOrderByUpvotesDesc(sessionId)
@@ -35,7 +35,7 @@ public class QuestionService {
 
     @Transactional
     public QuestionResponse createQuestion(UUID sessionId, CreateQuestionRequest request) {
-        Session session = sessionRepository.findById(sessionId)
+        Session session = sessionRepository.findById(String.valueOf(sessionId))
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + sessionId));
 
         Timestamp now = new Timestamp(System.currentTimeMillis());

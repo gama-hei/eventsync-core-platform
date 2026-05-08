@@ -13,8 +13,13 @@ public final class DateUtils {
         return Timestamp.valueOf(ldt);
     }
 
-    public static String fromTimestamp(Timestamp timestamp) {
+    public static LocalDateTime fromTimestamp(Timestamp timestamp) {
         if (timestamp == null) return null;
-        return timestamp.toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
+        return timestamp.toLocalDateTime();
+    }
+
+    public static String formatToIso(LocalDateTime localDateTime) {
+        if (localDateTime == null) return null;
+        return localDateTime.format(DateTimeFormatter.ISO_DATE_TIME);
     }
 }
