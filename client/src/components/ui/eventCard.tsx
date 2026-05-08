@@ -23,9 +23,9 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
 
   return (
     <>
-      <div className="grid grid-col-3 gap-20">
-        <div className="grid grid-coli-3 justify-center sm:flex  m-auto gap-10 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
-          <Card className="@container/card w-64 bg-card-first-bg ">
+      <div className="grid grid-col-3 gap-20   m-auto  ">
+        <div className="grid grid-col-3  sm:grid-col-3 justify-center sm:flex  mx-auto gap-10 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+          <Card className="@container/card w-64 sm:w-48 lg:w-64 bg-card-first-bg ">
             <CardHeader>
               <CardDescription className="text-background">
                 Event Start
@@ -38,7 +38,7 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
               <div className="text-background">{startDate}</div>
             </CardFooter>
           </Card>
-          <Card className="@container/card w-64 bg-card-second-bg">
+          <Card className="@container/card w-64 sm:w-48 lg:w-64 = bg-card-second-bg">
             <CardHeader>
               <CardDescription>Event Organizer</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -50,7 +50,7 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
               <div>avaana@gmail.com</div>
             </CardFooter>
           </Card>
-          <Card className="@container/card w-64 bg-card-last-bg">
+          <Card className="@container/card w-64 sm:w-48 lg:w-64  bg-card-last-bg">
             <CardHeader>
               <CardDescription>Event Avenue</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
