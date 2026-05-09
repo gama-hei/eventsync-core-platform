@@ -1,37 +1,131 @@
-
-'use client'
-
-import { SectionCards } from '@/components/ui/eventDetails'
-import { Event } from '@/types/types';
-import { useState } from 'react';
+import { Button } from "./button";
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Event } from "@/types/types";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Props {
-    events : Event[];
+  event: Event;
+  selectedEventId: string;        
+  onSelectEvent: (id: string) => void;
 }
-export default function page({events} : Props) {
-   const [selectedId, setSelectedId] = useState("1");
 
-  const event = events.find((e) => e.id === selectedId);
+export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
+  const { id, title, description, startDate, endDate, location, sessions } = event;
+
   return (
     <>
-   
-     <div  >
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                 {event ? (
-        <SectionCards event={event} />
-      ) : (
-        <p>No event found</p>
-      )}
-             
-            </div>
-          </div>
+      <div className="grid grid-col-3 gap-20   m-auto  ">
+        <div className="grid grid-col-3  sm:grid-col-3 justify-center sm:flex  mx-auto gap-10 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+          <Card className="@container/card w-64 sm:w-48 lg:w-64 bg-card-first-bg ">
+            <CardHeader>
+              <CardDescription className="text-background">
+                Event Start
+              </CardDescription>
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {startDate}
+              </CardTitle>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className="text-background">{startDate}</div>
+            </CardFooter>
+          </Card>
+          <Card className="@container/card w-64 sm:w-48 lg:w-64 = bg-card-second-bg">
+            <CardHeader>
+              <CardDescription>Event End</CardDescription>
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                {endDate}
+              </CardTitle>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className="line-clamp-1 flex gap-2 font-medium"></div>
+              <div>{endDate}</div>
+            </CardFooter>
+          </Card>
+          <Card className="@container/card w-64 sm:w-48 lg:w-64  bg-card-last-bg">
+            <CardHeader>
+              <CardDescription>Event Avenue</CardDescription>
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                {location}
+              </CardTitle>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className="line-clamp-1 flex gap-2 font-medium"></div>
+              <div>{location}</div>
+            </CardFooter>
+          </Card>
         </div>
-        
-    </>
+        <div className="grid grid-col-2 sm:flex justify-center gap-10 ">
+          <Card
+            className="relative w-full max-w-sm pt-0 cursor-pointer transition-all duration-200"
+           
+          >
+            <CardHeader className="text-background ">
+              <CardTitle className="text-2xl">{title.toUpperCase()}</CardTitle>
+              <CardDescription className="text-background">
+                {description}
+              </CardDescription>
+            </CardHeader>
        
-     
-
-  )
+        
+          </Card>
+{/* 
+          <Card className="w-full max-w-sm ring-1 ring-background">
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-center">
+              Inscription
+            </CardTitle>
+            <CardContent>
+              <form>
+                <div className="flex flex-col gap-6">
+                  <div className="grid gap-2">
+                    <Label htmlFor="text">FullName</Label>
+                    <Input
+                      className="bg-foreground/10 border-none placeholder:text-input-placeholder"
+                      id="fullName"
+                      type="text"
+                      placeholder="Enter Your fullname"
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      className="bg-foreground/10 border-none placeholder:text-input-placeholder"
+                      id="email"
+                      type="email"
+                      placeholder="Enter Your Email"
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label htmlFor="number">Phone number</Label>
+                    </div>
+                    <Input
+                      className="bg-foreground/10 border-none placeholder:text-input-placeholder"
+                      id="phoneNumber"
+                      type="text"
+                      required
+                      placeholder="Enter Your phone number"
+                    />
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+            <Button type="submit" className="w-48 flex bg-green-600 m-auto cursor-pointer">
+              Register To Event
+            </Button>
+          </Card> */}
+        </div>
+      </div>
+    </>
+  );
 }
-
