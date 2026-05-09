@@ -21,18 +21,34 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (organizerRepository.count() == 0) {
-            Organizer organizer = Organizer.builder()
-                    .email("organizer@eventsync.com")
-                    .password(passwordEncoder.encode("Organizer123!"))
-                    .fullName("Default Organizer")
-                    .isActive(true)
-                    .createdAt(Timestamp.from(Instant.now()))
-                    .build();
+        organizerRepository.deleteAll();
+        log.info(" Tous les organisateurs ont été supprimés");
 
-            organizerRepository.save(organizer);
+        String email = "admin@eventsync.com";
+        String plainPassword = "admin123";
+        String encodedPassword = passwordEncoder.encode(plainPassword);
+
+        log.info(" Création de l'admin:");
+        log.info("   Email: {}", email);
+        log.info("   Mot de passe: {}", plainPassword);
+        log.info("   Hash généré: {}", encodedPassword);
+
+        Organizer organizer = Organizer.builder()
+                .email(email)
+                .password(encodedPassword)
+                .fullName("Administrator")
+                .isActive(true)
+                .createdAt(Timestamp.from(Instant.now()))
+                .build();
+
+        organizerRepository.save(organizer);
+
+        Organizer saved = organizerRepository.findByEmail(email);
+        if (saved != null) {
+            log.info("Admin créé avec succès!");
+            log.info("   Vérification mot de passe: {}", passwordEncoder.matches(plainPassword, saved.getPassword()));
         } else {
-            log.info("✅ Database already contains {} organizers", organizerRepository.count());
+            log.error(" echec de la création de l'admin");
         }
     }
 }
