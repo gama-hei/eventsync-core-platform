@@ -40,14 +40,14 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
           </Card>
           <Card className="@container/card w-64 sm:w-48 lg:w-64 = bg-card-second-bg">
             <CardHeader>
-              <CardDescription>Event Organizer</CardDescription>
+              <CardDescription>Event End</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                AVAANA HUB
+                {endDate}
               </CardTitle>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">
               <div className="line-clamp-1 flex gap-2 font-medium"></div>
-              <div>avaana@gmail.com</div>
+              <div>{endDate}</div>
             </CardFooter>
           </Card>
           <Card className="@container/card w-64 sm:w-48 lg:w-64  bg-card-last-bg">
@@ -74,18 +74,10 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
                 {description}
               </CardDescription>
             </CardHeader>
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdGvNlLLu9WU1r3yMaMIvkEgjvC7dgGVyt6A&s"
-              alt="Event cover"
-              className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40 rounded"
-            />
-            <CardHeader>
-              <CardDescription className="text-background">
-                {description}
-              </CardDescription>
-            </CardHeader>
+       
+        
           </Card>
-
+{/* 
           <Card className="w-full max-w-sm ring-1 ring-background">
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-center">
               Inscription
@@ -131,7 +123,7 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
             <Button type="submit" className="w-48 flex bg-green-600 m-auto cursor-pointer">
               Register To Event
             </Button>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </>
