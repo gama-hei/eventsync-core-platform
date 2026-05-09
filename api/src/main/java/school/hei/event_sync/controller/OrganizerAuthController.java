@@ -24,13 +24,16 @@ public class OrganizerAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        System.out.println("Tentative de login pour: " + request.getEmail());
         try {
             LoginResponse response = organizerAuthService.authenticate(
                     request.getEmail(),
                     request.getPassword()
             );
+            System.out.println("Login réussi pour: " + request.getEmail());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            System.out.println("Login échoué pour: " + request.getEmail() + " - " + e.getMessage());
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
