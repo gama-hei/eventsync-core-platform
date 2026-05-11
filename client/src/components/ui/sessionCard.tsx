@@ -53,15 +53,15 @@ export function SessionCards({ sessions = [] }: Props) {
   return (
     <>
       <div className="mx-auto  max-w-md overflow-hidden pb-5 pt-5 sm:pt-20 md:max-w-2xl ">
-        <CardHeader className="w-full">
-          <CardTitle className=" text-xl sm:text-4xl text-center sm:text-center text-background ">
+        <CardHeader className="w-full ">
+          <CardTitle className=" text-xl sm:text-4xl text-center sm:text-center text-foreground ">
             <h1 className="sm:text-center"> Conference Schedule</h1> 
           </CardTitle>
-          <CardDescription className=" w-full flex justfiy-center text-center">
+          <CardDescription className=" w-full flex justfiy-center text-center text-foreground">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mollis
             quam malesuada scelerisque ultrices gravida
           </CardDescription>
-          <CardTitle className="text-2xl text-center text-background">
+          <CardTitle className="text-2xl text-center text-foreground">
             {currentDate ? formatDate(currentDate) : "No sessions"}
           </CardTitle>
         </CardHeader>
