@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "./button";
 import { Session } from "@/types/types";
+import { Link } from "lucide-react";
 import {
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Heart, Radio } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart, Radio, Star } from "lucide-react";
 
 interface Props {
   sessions: Session[];
@@ -86,12 +87,21 @@ export function SessionCards({ sessions = [] }: Props) {
                   {startTime.slice(11, 16)} - {endTime.slice(11, 16)}
                 </h1>
                 <div className="grid grid-col-2 w-96">
-                  <CardTitle className="text-sm font-bold lg:text-2xl">{title}</CardTitle>
+                  <CardTitle className="text-sm font-bold lg:text-2xl">
+                    <a href="/sessionsDetails" className="underline">{title} </a> 
+                   </CardTitle>
                   <CardDescription className="text-[10px] lg:text-[15px]">{description}</CardDescription>
+                   <CardTitle className="text-sm font-bold lg:text-2xl">
+                    <a href="/sessionsDetails" className="underline">{roomName} </a> 
+                   </CardTitle>
+                    <CardTitle className="text-sm font-bold lg:text-2xl">
+                    <a href="/sessionsDetails" className="underline"> SpeakersOne </a> 
+                   </CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button type="button" className="bg-transparent cursor-pointer">
-                    <Heart size={24} strokeWidth={1.5} />
+                    
+                    <Star size={24} strokeWidth={1.5}/>
                   </Button>
                   <Button type="button" className="bg-transparent">
                     {isLive && <Radio className="text-red-500" />}
