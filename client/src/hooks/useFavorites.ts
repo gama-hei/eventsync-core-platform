@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useCallback, useEffect } from "react";
 
 export function useFavorites() {
@@ -5,6 +7,7 @@ export function useFavorites() {
 
   useEffect(() => {
     const stored = localStorage.getItem("favorites");
+
     if (stored) {
       try {
         setFavorites(JSON.parse(stored));
@@ -14,17 +17,23 @@ export function useFavorites() {
     }
   }, []);
 
-  const toggleFavorite = useCallback((sessionId: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleFavorite = useCallback((sessionId: string) => {
     setFavorites((prev) => {
       const newFavorites = prev.includes(sessionId)
         ? prev.filter((id) => id !== sessionId)
         : [...prev, sessionId];
-      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(newFavorites)
+      );
+
       return newFavorites;
     });
   }, []);
 
-  return { favorites, toggleFavorite };
+  return {
+    favorites,
+    toggleFavorite,
+  };
 }
