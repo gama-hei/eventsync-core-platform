@@ -23,4 +23,6 @@ export interface Event {
   startDate: string;
   endDate: string;
   location: string;
+  sessions?: Session[];
 }
+
