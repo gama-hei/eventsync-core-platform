@@ -69,8 +69,8 @@ export function EventCard({ event, selectedEventId, onSelectEvent }: Props) {
            
           >
             <CardHeader className="text-background ">
-              <CardTitle className="text-2xl">{title.toUpperCase()}</CardTitle>
-              <CardDescription className="text-background">
+              <CardTitle className="text-2xl text-foreground">{title.toUpperCase()}</CardTitle>
+              <CardDescription className="text-foreground">
                 {description}
               </CardDescription>
             </CardHeader>

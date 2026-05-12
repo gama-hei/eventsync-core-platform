@@ -29,7 +29,7 @@ const events: Event[] = [
 
 export default function Page() {
   return (
-    <div className="bg-muted-foreground ">
+    <div className="bg-background ">
         <EventList events = {events} />
         {/* <CardDemo /> */}
         
