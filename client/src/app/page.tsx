@@ -48,6 +48,7 @@ export default async function HomePage() {
           <Sidebar favoritesCount={0} />
         </div>
       </main>
+
     </div>
   );
 }
