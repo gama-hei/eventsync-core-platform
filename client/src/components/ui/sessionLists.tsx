@@ -11,6 +11,7 @@ interface Props{
 
 
 export default function SessionList({sessions} : Props){
+    
        const [selectedId, setSelectedId] = useState("1");
         const session = sessions.filter(s => s.eventId === selectedId)
     return(
