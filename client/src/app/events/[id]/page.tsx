@@ -1,24 +1,25 @@
-import { Calendar, Clock, MapPin, User, MessageCircle, ArrowLeft, DoorOpen } from "lucide-react";
+import { API_BASE_URL } from "@/lib/constants";
+import { Event } from "@/types";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  DoorOpen,
+  MapPin,
+  Mic2,
+  Users
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { API_BASE_URL } from "@/lib/constants";
-import { Event, Session } from "@/types";
 
 export const revalidate = 60;
 
 async function getEvent(id: string): Promise<Event | null> {
   const url = `${API_BASE_URL}/events/${id}`;
-  console.log("Fetching event from:", url);
 
   try {
-    const res = await fetch(url, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
     return res.json();
   } catch (error) {
     console.error("Fetch error:", error);
@@ -27,7 +28,8 @@ async function getEvent(id: string): Promise<Event | null> {
 }
 
 function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString("en-US", {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -49,134 +51,207 @@ function isLive(startTime: string, endTime: string): boolean {
 }
 
 interface EventPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;
-
-  console.log("EventPage rendering for ID:", id);
-
   const event = await getEvent(id);
 
-  if (!event) {
-    notFound();
-  }
+  if (!event) notFound();
 
   const sessions = event.sessions || [];
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold text-gray-900">
-            EventSync
-          </Link>
+    <main>
+      <div className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white border-b border-gray-100">
+        <div className="absolute inset-0 bg-grid-gray-100/25 mask-[radial-gradient(ellipse_at_center,white,transparent)]" />
+        <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Link
             href="/events"
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
-            All Events
+            All events
           </Link>
-        </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        <div className="mb-10">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <Calendar className="h-4 w-4" />
-            <span>{formatDate(event.startDate)}</span>
-            <span>—</span>
-            <span>{formatDate(event.endDate)}</span>
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 rounded-full text-sm">
+              <Calendar className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-600 font-mono text-sm">
+                {formatDate(event.startDate)} – {formatDate(event.endDate)}
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 rounded-full text-sm">
+              <MapPin className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-600">{event.location}</span>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
+
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-black tracking-tight leading-[1.1] mb-6">
             {event.title}
           </h1>
-          <p className="text-gray-600 text-lg leading-relaxed mb-6">
+
+          <p className="text-xl text-gray-500 leading-relaxed max-w-2xl">
             {event.description}
           </p>
-          <div className="flex items-center gap-4 text-gray-500">
-            <div className="flex items-center gap-1.5">
-              <MapPin className="h-4 w-4" />
-              <span>{event.location}</span>
+
+          <div className="flex flex-wrap items-center gap-6 mt-8 pt-4 border-t border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                <Users className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-400 font-medium uppercase tracking-wide">
+                  Total Sessions
+                </div>
+                <div className="text-xl font-semibold text-black">
+                  {sessions.length}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <MessageCircle className="h-4 w-4" />
-              <span>{sessions.length} sessions</span>
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                <Mic2 className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <div className="text-xs text-gray-400 font-medium uppercase tracking-wide">
+                  Speakers
+                </div>
+                <div className="text-xl font-semibold text-black">
+                  {
+                    [
+                      ...new Set(
+                        sessions.flatMap(
+                          (s) => s.speakers?.map((sp) => sp.id) || [],
+                        ),
+                      ),
+                    ].length
+                  }
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="border-t border-gray-100 pt-10">
-          <div className="flex items-center gap-3 mb-8">
-            <DoorOpen className="h-6 w-6 text-indigo-600" />
-            <h2 className="text-2xl font-serif font-semibold text-gray-900">
-              Sessions
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-serif font-semibold text-black tracking-tight">
+              Schedule
             </h2>
+            <p className="text-sm text-gray-400 mt-1">
+              All sessions for this event
+            </p>
           </div>
+          <div className="text-sm text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
+            {sessions.length} sessions
+          </div>
+        </div>
 
-          {sessions.length === 0 ? (
-            <div className="text-center py-16 bg-gray-50 rounded-2xl">
-              <p className="text-gray-400">No sessions scheduled yet</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {sessions.map((session) => {
-                const live = isLive(session.startTime, session.endTime);
-                return (
-                  <Link key={session.id} href={`/sessions/${session.id}`}>
-                    <div className={`group p-5 rounded-xl border transition-all hover:shadow-md ${
-                      live ? "border-red-200 bg-red-50/30" : "border-gray-100 hover:border-gray-200"
-                    }`}>
-                      <div className="flex flex-col md:flex-row md:items-start gap-4">
-                        <div className="md:w-1/5">
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Clock className="h-4 w-4" />
-                            <span className="font-mono">
-                              {formatTime(session.startTime)} — {formatTime(session.endTime)}
-                            </span>
-                          </div>
-                          {live && (
-                            <span className="inline-block mt-2 text-xs font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
-                              LIVE NOW
-                            </span>
-                          )}
+        {sessions.length === 0 ? (
+          <div className="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
+            <DoorOpen className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500 font-medium">
+              No sessions scheduled yet
+            </p>
+            <p className="text-sm text-gray-400 mt-1">
+              Check back later for updates
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-100 border-t border-gray-100">
+            {sessions.map((session, index) => {
+              const live = isLive(session.startTime, session.endTime);
+              return (
+                <Link key={session.id} href={`/sessions/${session.id}`}>
+                  <div
+                    className={`group relative py-6 hover:bg-gray-50/50 transition-colors -mx-6 px-6 rounded-2xl ${
+                      live ? "bg-red-50/30" : ""
+                    }`}
+                  >
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/4">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                          <span className="font-mono text-sm text-gray-600">
+                            {formatTime(session.startTime)}
+                          </span>
+                          <span className="text-gray-300">—</span>
+                          <span className="font-mono text-sm text-gray-500">
+                            {formatTime(session.endTime)}
+                          </span>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
-                            {session.title}
-                          </h3>
-                          <p className="text-gray-500 line-clamp-2 text-sm leading-relaxed">
-                            {session.description || "No description available"}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-400">
-                            <div className="flex items-center gap-1.5">
-                              <DoorOpen className="h-3.5 w-3.5" />
-                              <span>{session.roomName}</span>
-                            </div>
-                            {session.speakers && session.speakers.length > 0 && (
-                              <div className="flex items-center gap-1.5">
-                                <User className="h-3.5 w-3.5" />
-                                <span>{session.speakers.map(s => s.fullName).join(", ")}</span>
+                        <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-400">
+                          <DoorOpen className="h-3.5 w-3.5" />
+                          <span className="text-sm">{session.roomName}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            {live && (
+                              <div className="flex items-center gap-1.5 mb-2">
+                                <span className="relative flex h-2 w-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
+                                </span>
+                                <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">
+                                  Live Now
+                                </span>
                               </div>
                             )}
+                            <h3 className="text-xl font-semibold text-black group-hover:text-indigo-600 transition-colors">
+                              {session.title}
+                            </h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                              {session.description ||
+                                "No description available"}
+                            </p>
+                            {session.speakers &&
+                              session.speakers.length > 0 && (
+                                <div className="flex items-center gap-2 mt-3">
+                                  <div className="flex -space-x-2">
+                                    {session.speakers
+                                      .slice(0, 3)
+                                      .map((speaker) => (
+                                        <div
+                                          key={speaker.id}
+                                          className="w-7 h-7 rounded-full bg-indigo-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-indigo-600"
+                                        >
+                                          {speaker.fullName.charAt(0)}
+                                        </div>
+                                      ))}
+                                  </div>
+                                  <span className="text-xs text-gray-400">
+                                    {session.speakers
+                                      .map((s) => s.fullName)
+                                      .join(", ")}
+                                  </span>
+                                </div>
+                              )}
                           </div>
-                        </div>
-                        <div className="md:w-auto flex items-center">
-                          <ArrowLeft className="h-5 w-5 text-gray-300 rotate-180 group-hover:text-indigo-500 transition-colors" />
+                          <div className="shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                              <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-indigo-600 rotate-180 transition-colors" />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+
+                    {index !== sessions.length - 1 && (
+                      <div className="absolute bottom-0 left-6 right-6 h-px bg-gray-100" />
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
