@@ -33,5 +33,5 @@ public class SessionController {
     @GetMapping("/{sessionId}")
     public ResponseEntity<SessionResponse> getSession(@PathVariable String sessionId) {
         return ResponseEntity.ok(sessionService.getSessionById(sessionId));
-    }
+   }
 }
