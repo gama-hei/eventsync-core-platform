@@ -1,26 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { BookmarkCheck, BookmarkPlus, SearchX } from "lucide-react";
+import {
+  BookmarkCheck,
+  BookmarkPlus,
+  SearchX,
+} from "lucide-react";
+
 import { Session } from "@/types";
 import { formatTime } from "@/lib/utils";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface LiveSessionsListProps {
   sessions: Session[];
-  favorites: string[];
-  onToggleFavorite: (id: string, e: React.MouseEvent) => void;
 }
 
 export function LiveSessionsList({
   sessions,
-  favorites,
-  onToggleFavorite,
 }: LiveSessionsListProps) {
+  const { favorites, toggleFavorite } = useFavorites();
+
   if (sessions.length === 0) {
     return (
       <div className="py-20 flex flex-col items-center justify-center text-center">
         <SearchX className="h-10 w-10 text-gray-200 mb-4" />
-        <h4 className="text-lg font-bold text-gray-900 mb-1">Quiet for now</h4>
+
+        <h4 className="text-lg font-bold text-gray-900 mb-1">
+          Quiet for now
+        </h4>
+
         <p className="text-gray-500 text-sm max-w-xs mx-auto font-serif italic">
           Check the full schedule to see what's coming up next.
         </p>
@@ -41,18 +49,24 @@ export function LiveSessionsList({
               <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
                 {session.roomName}
               </span>
+
               <span className="text-gray-300">•</span>
+
               <span className="text-xs font-medium text-gray-500">
-                {formatTime(session.startTime)} — {formatTime(session.endTime)}
+                {formatTime(session.startTime)} —{" "}
+                {formatTime(session.endTime)}
               </span>
             </div>
+
             <h4 className="text-2xl font-bold mb-3 group-hover:underline decoration-1 underline-offset-4 tracking-tight">
               {session.title}
             </h4>
+
             <p className="text-gray-500 line-clamp-2 text-sm leading-relaxed mb-6">
               {session.description ||
                 "Join this session to interact with speakers in real-time..."}
             </p>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
@@ -65,12 +79,19 @@ export function LiveSessionsList({
                     </div>
                   ))}
                 </div>
+
                 <span className="text-xs font-semibold text-black italic">
-                  {session.speakers?.map((s) => s.fullName).join(", ")}
+                  {session.speakers
+                    ?.map((s) => s.fullName)
+                    .join(", ")}
                 </span>
               </div>
+
               <button
-                onClick={(e) => onToggleFavorite(session.id, e)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleFavorite(session.id);
+                }}
                 className="text-gray-400 hover:text-black transition-colors"
               >
                 {favorites.includes(session.id) ? (
