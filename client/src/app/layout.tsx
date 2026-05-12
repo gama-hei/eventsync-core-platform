@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
+import { Header } from "@/components/Header";
 import "./globals.css";
 
 const quicksand = Quicksand({
@@ -20,11 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${quicksand.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+    <html lang="en" className={`${quicksand.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col font-sans">
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
