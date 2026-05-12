@@ -3,12 +3,9 @@ import { useState, useEffect } from "react";
 import { Button } from "./button";
 import { Session } from "@/types/types";
 import { Link } from "lucide-react";
-import {
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, Heart, Radio, Star } from "lucide-react";
+import { error } from "console";
 
 interface Props {
   sessions: Session[];
@@ -28,12 +25,14 @@ const formatDate = (dateStr: string) => {
 const getDateOnly = (dateStr: string) => dateStr.slice(0, 10);
 
 export function SessionCards({ sessions = [] }: Props) {
-  const uniqueDates = [...new Set(sessions.map((s) => getDateOnly(s.startTime)))];
+  const uniqueDates = [
+    ...new Set(sessions.map((s) => getDateOnly(s.startTime))),
+  ];
   const [currentDateIndex, setCurrentDateIndex] = useState(0);
 
   const currentDate = uniqueDates[currentDateIndex];
   const filteredSessions = sessions.filter(
-    (s) => getDateOnly(s.startTime) === currentDate
+    (s) => getDateOnly(s.startTime) === currentDate,
   );
 
   const handlePrevious = () => {
@@ -43,36 +42,23 @@ export function SessionCards({ sessions = [] }: Props) {
   const handleNext = () => {
     setCurrentDateIndex((prev) => Math.min(prev + 1, uniqueDates.length - 1));
   };
-    const [mounted, setMounted] = useState(false); 
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true); 
+    setMounted(true);
   }, []);
-
 
   return (
     <>
-      <div className="mx-auto  max-w-md overflow-hidden pb-5 pt-5 sm:pt-20 md:max-w-2xl ">
-        <CardHeader className="w-full ">
-          <CardTitle className=" text-xl sm:text-4xl text-center sm:text-center text-foreground ">
-            <h1 className="sm:text-center"> Conference Schedule</h1> 
-          </CardTitle>
-          <CardDescription className=" w-full flex justfiy-center text-center text-foreground">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mollis
-            quam malesuada scelerisque ultrices gravida
-          </CardDescription>
-          <CardTitle className="text-2xl text-center text-foreground">
-            {currentDate ? formatDate(currentDate) : "No sessions"}
-          </CardTitle>
-        </CardHeader>
-      </div>
-
+      <CardTitle className=" text-xl sm:text-4xl text-center sm:text-center text-foreground ">
+                    <h1 className="sm:text-center"> Conference Schedule</h1>
+                  </CardTitle>
       <div>
         {filteredSessions.map(
           ({
             id,
             title,
-            
+
             description,
             startTime,
             endTime,
@@ -82,34 +68,45 @@ export function SessionCards({ sessions = [] }: Props) {
             isLive = false,
           }) => (
             <div key={id} className="flex overflow-hidden  justify-between py-10 bg-card-bg-session lg:w-[40vw] gap-4 mx-auto px-4 text-background mb-4 cursor-pointer ">
-           
-                <h1 className="flex items-center text-center font-bold">
-                  {startTime.slice(11, 16)} - {endTime.slice(11, 16)}
-                </h1>
-                <div className="grid grid-col-2 w-96">
-                  <CardTitle className="text-sm font-bold lg:text-2xl">
-                    <a href="/sessionsDetails" className="underline">{title} </a> 
-                   </CardTitle>
-                  <CardDescription className="text-[10px] lg:text-[15px]">{description}</CardDescription>
-                   <CardTitle className="text-sm font-bold lg:text-2xl">
-                    <a href="/sessionsDetails" className="underline">{roomName} </a> 
-                   </CardTitle>
-                    <CardTitle className="text-sm font-bold lg:text-2xl">
-                    <a href="/sessionsDetails" className="underline"> SpeakersOne </a> 
-                   </CardTitle>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button type="button" className="bg-transparent cursor-pointer">
-                    
-                    <Star size={24} strokeWidth={1.5}/>
-                  </Button>
-                  <Button type="button" className="bg-transparent">
-                    {isLive && <Radio className="text-red-500" />}
-                  </Button>
-                </div>
-            
+             
+                  
+                
+              <div ></div>
+              <h1 className="flex items-center text-center font-bold">
+                {startTime.slice(11, 16)} - {endTime.slice(11, 16)}
+              </h1>
+              <div className="grid grid-col-2 w-96">
+                <CardTitle className="text-sm font-bold lg:text-2xl">
+                  <a href="/sessionsDetails" className="underline">
+                    {title}{" "}
+                  </a>
+                </CardTitle>
+                <CardDescription className="text-[10px] lg:text-[15px]">
+                  {description}
+                </CardDescription>
+                <CardTitle className="text-sm font-bold lg:text-2xl">
+                  <a href="/sessionsDetails" className="underline">
+                    {roomName}{" "}
+                  </a>
+                </CardTitle>
+                <CardTitle className="text-sm font-bold lg:text-2xl">
+                  <a href="/sessionsDetails" className="underline">
+                    {" "}
+                    SpeakersOne {}
+                  </a>
+                </CardTitle>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button type="button" className="bg-transparent cursor-pointer">
+                  <Star size={24} strokeWidth={1.5} />
+                </Button>
+                <Button type="button" className="bg-transparent">
+                  {isLive && <Radio className="text-red-500" />}
+                </Button>
+              </div>
+              <div className="mx-auto  max-w-md overflow-hidden pb-5 pt-5 sm:pt-20 md:max-w-2xl "></div>
             </div>
-          )
+          ),
         )}
       </div>
 
