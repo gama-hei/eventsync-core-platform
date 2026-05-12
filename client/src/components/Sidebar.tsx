@@ -1,8 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export function Sidebar({ favoritesCount }: { favoritesCount: number }) {
+export function Sidebar() {
+  const [favoritesCount, setFavoritesCount] = useState(0);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("favorites");
+    if (stored) {
+      const favorites = JSON.parse(stored);
+      setFavoritesCount(favorites.length);
+    }
+
+    const handleStorageChange = () => {
+      const updated = localStorage.getItem("favorites");
+      if (updated) {
+        setFavoritesCount(JSON.parse(updated).length);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   return (
     <aside className="lg:col-span-4">
       <div className="sticky top-32 space-y-12">
@@ -20,10 +41,10 @@ export function Sidebar({ favoritesCount }: { favoritesCount: number }) {
             </p>
           )}
           <Link
-            href="/schedule"
+            href="/favorites"
             className="text-sm font-bold text-indigo-600 hover:text-indigo-700 underline underline-offset-4 transition-all"
           >
-            Go to full schedule
+            View my itinerary →
           </Link>
         </div>
         <div>
