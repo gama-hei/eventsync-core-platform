@@ -42,7 +42,6 @@ export default function EventCard() {
         });
     }
   }, [id]);
-  // const { id, title, description, startDate, endDate, location, sessions } = event;
   if (loading) {
     return 
     <div>
