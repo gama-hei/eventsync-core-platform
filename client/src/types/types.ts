@@ -34,6 +34,7 @@ export interface Session {
   startTime: string;
   endTime: string;
   room: Room;
+   roomId:string;
   capacity?: number;
   speakers: Speaker[];
   isLive: boolean;

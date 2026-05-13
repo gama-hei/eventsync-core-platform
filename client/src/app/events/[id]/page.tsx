@@ -30,7 +30,7 @@ async function getEvent(id: string): Promise<Event | null> {
   }
 }
 
-async function getRoom(): Promise<Room[] | null> {
+export async function getRoom(): Promise<Room[] | null> {
   const urlRoom = `${API_BASE_URL}/rooms`;
   try {
     const res = await fetch(urlRoom, { cache: "no-store" });
@@ -41,6 +41,7 @@ async function getRoom(): Promise<Room[] | null> {
     return null;
   }
 }
+console.log(getRoom());
 
 
 
@@ -53,14 +54,14 @@ function formatDate(dateString: string): string {
   });
 }
 
-function formatTime(dateString: string): string {
+export function formatTime(dateString: string): string {
   return new Date(dateString).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
   });
 }
 
-function isLive(startTime: string, endTime: string): boolean {
+export function isLive(startTime: string, endTime: string): boolean {
   const now = new Date();
   const start = new Date(startTime);
   const end = new Date(endTime);
