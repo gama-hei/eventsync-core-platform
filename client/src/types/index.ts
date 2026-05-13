@@ -10,6 +10,7 @@ export interface Session {
   startTime: string;
   endTime: string;
   roomName: string;
+  roomId:string;
   capacity: number;
   eventId: string;
   eventTitle: string;
@@ -24,5 +25,9 @@ export interface Event {
   endDate: string;
   location: string;
   sessions?: Session[];
+}
+export interface Room {
+  id: string;
+  name: string;
 }
 

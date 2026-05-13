@@ -1,5 +1,8 @@
 import { API_BASE_URL } from "@/lib/constants";
 import { Event } from "@/types";
+import { Room } from "@/types";
+import { log } from "console";
+
 import {
   ArrowLeft,
   Calendar,
@@ -7,7 +10,7 @@ import {
   DoorOpen,
   MapPin,
   Mic2,
-  Users
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -26,6 +29,20 @@ async function getEvent(id: string): Promise<Event | null> {
     return null;
   }
 }
+
+async function getRoom(): Promise<Room[] | null> {
+  const urlRoom = `${API_BASE_URL}/rooms`;
+  try {
+    const res = await fetch(urlRoom, { cache: "no-store" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+}
+
+
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -57,6 +74,9 @@ interface EventPageProps {
 export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;
   const event = await getEvent(id);
+  const rooms = await getRoom();
+
+  console.log(rooms);
 
   if (!event) notFound();
 
@@ -110,7 +130,7 @@ export default async function EventPage({ params }: EventPageProps) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
                 <Mic2 className="h-5 w-5 text-white" />
               </div>
@@ -130,7 +150,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   }
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -163,6 +183,7 @@ export default async function EventPage({ params }: EventPageProps) {
         ) : (
           <div className="divide-y divide-gray-100 border-t border-gray-100">
             {sessions.map((session, index) => {
+              const room = rooms?.find((room) => room.id === session.roomId);
               const live = isLive(session.startTime, session.endTime);
               return (
                 <Link key={session.id} href={`/sessions/${session.id}`}>
@@ -185,7 +206,10 @@ export default async function EventPage({ params }: EventPageProps) {
                         </div>
                         <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-400">
                           <DoorOpen className="h-3.5 w-3.5" />
-                          <span className="text-sm">{session.roomName}</span>
+
+                          <span className="text-sm">
+                            {room?.name || "Salle inconnue"}
+                          </span>
                         </div>
                       </div>
 
