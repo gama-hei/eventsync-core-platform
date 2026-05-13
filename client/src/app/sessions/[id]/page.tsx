@@ -18,10 +18,11 @@ import {
   AlarmClockCheck,
   Clock,
 } from "lucide-react";
-import { error } from "console";
+import { error, log } from "console";
 import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import { isLive, getRoom, formatTime } from "@/app/events/[id]/page";
+import { text } from "stream/consumers";
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -40,6 +41,9 @@ export default function SessionCards() {
   const [error, setError] = useState<string | null>(null);
   const [rooms, setRooms] = useState([]);
   const [roomName, setRoomName] = useState("");
+  const [liked,setLiked] = useState(false)
+ 
+    
 
   useEffect(() => {
     console.log("ID récupéré:", id);
@@ -74,9 +78,8 @@ export default function SessionCards() {
   }, []);
 
   useEffect(() => {
-   
     if (session && rooms.length > 0) {
-       const room =  rooms.find((r) => r.id === session.roomId);
+      const room = rooms.find((r) => r.id === session.roomId);
       setRoomName(room?.name || "Salle non trouvée");
     }
   }, [session, rooms]);
@@ -108,6 +111,18 @@ export default function SessionCards() {
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
                 Sessions Details
               </span>
+              <div   className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
+              
+                  Add to favorite
+                <Heart 
+                  onClick={() => setLiked(!liked)}
+      className={`h-6 w-6 cursor-pointer transition-colors ${
+        liked ? 'fill-red-500 text-red-500' : 'text-gray-400'
+      }`}
+                />
+                
+              </div>
+             
             </div>
             <h2 className="text-2xl md:text-5xl font-serif font-medium text-black mb-8 leading-tight tracking-tight">
               {session.title}
