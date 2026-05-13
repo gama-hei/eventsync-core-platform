@@ -167,7 +167,7 @@ export default function SessionCards() {
             </div>
 
             <Link
-              href={`/events/`}
+              href={`/events/${session.eventId}`}
               className="inline-flex items-center gap-3 bg-black text-white px-10 py-4 rounded-full font-bold text-base hover:bg-zinc-800 transition-all"
             >
               <ArrowLeft className="h-4 w-4" /> Back To Event
