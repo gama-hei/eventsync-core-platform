@@ -124,6 +124,8 @@ public class RoomService {
         response.setDescription(session.getDescription());
         response.setStartTime(session.getStartTime().toLocalDateTime());
         response.setEndTime(session.getEndTime().toLocalDateTime());
+        response.setCapacity(session.getCapacity());
+        response.setEventId(session.getEvent().getId());
         response.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
         response.setRoomName(session.getRoom() != null ? session.getRoom().getName() : null);
         return response;
