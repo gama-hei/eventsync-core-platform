@@ -166,14 +166,14 @@ export default function SessionsPage() {
                   </div>
 
                   {/* Speakers */}
-                  {/* {session.speakers && session.speakers.length > 0 && (
+                  {session.speakers && session.speakers.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mb-6 text-sm font-medium text-gray-500">
                                             <div className="flex items-center gap-2">
                                                 <Mic2 className="h-6 w-6 text-gray-400" />
                                             </div>
-                                            <div className="flex items-center gap-2 bg-red-600">
+                                            <div className="flex items-center gap-2 ">
                                                 Speaker(s):
-                                                 {session.speakers[0].fullName}
+                                                
                                                 {session.speakers.map((speaker, idx) => (
                                                     <span key={speaker.id}>
                                                         <Link href={`/speakers/${speaker.id}`}>
@@ -181,12 +181,12 @@ export default function SessionsPage() {
                                                                 {speaker.fullName}
                                                             </span>
                                                         </Link>
-                                                        {idx < session.speaker - 1 && ", "}
+                                                        {idx < session.speakers - 1 && ", "}
                                                     </span>
                                                 ))}
                                             </div>
                                         </div>
-                                    )} */}
+                                    )} 
 
                   <Link
                     href={`/sessions/${session.id}`}
