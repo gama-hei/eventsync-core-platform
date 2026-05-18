@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Session } from "@/types/types";
+import { Session, Event } from "@/types/types";
 import { Divide, Speaker } from "lucide-react";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -23,6 +23,7 @@ import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import { isLive, getRoom, formatTime } from "@/app/events/[id]/page";
 import { text } from "stream/consumers";
+import { Room } from "@/types";
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -39,14 +40,12 @@ export default function SessionCards() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<Room | null>(null);
   const [roomName, setRoomName] = useState("");
-  const [liked,setLiked] = useState(false)
- 
-    
+  const [roomid, setRoomid] = useState("");
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    console.log("ID récupéré:", id);
     if (id) {
       fetch(`${API_BASE_URL}/sessions/${id}`)
         .then((response) => {
@@ -78,11 +77,14 @@ export default function SessionCards() {
   }, []);
 
   useEffect(() => {
-    if (session && rooms.length > 0) {
+    if (session && rooms?.length > 0) {
+      // ✅ L'optional chaining retourne undefined au lieu d'erreur
       const room = rooms.find((r) => r.id === session.roomId);
       setRoomName(room?.name || "Salle non trouvée");
+      setRoomid(session.roomId);
     }
   }, [session, rooms]);
+  console.log(roomid);
 
   if (loading) {
     return;
@@ -111,18 +113,15 @@ export default function SessionCards() {
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
                 Sessions Details
               </span>
-              <div   className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
-              
-                  Add to favorite
-                <Heart 
+              <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
+                Add to favorite
+                <Heart
                   onClick={() => setLiked(!liked)}
-      className={`h-6 w-6 cursor-pointer transition-colors ${
-        liked ? 'fill-red-500 text-red-500' : 'text-gray-400'
-      }`}
+                  className={`h-6 w-6 cursor-pointer transition-colors ${
+                    liked ? "fill-red-500 text-red-500" : "text-gray-400"
+                  }`}
                 />
-                
               </div>
-             
             </div>
             <h2 className="text-2xl md:text-5xl font-serif font-medium text-black mb-8 leading-tight tracking-tight">
               {session.title}
@@ -147,7 +146,8 @@ export default function SessionCards() {
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <Link href={`/rooms/{roomId}/sessions`} className="underline">
+
+                <Link href={`/rooms/${roomid}/sessions`} className="underline">
                   {roomName}
                 </Link>
               </div>
@@ -167,7 +167,7 @@ export default function SessionCards() {
             </div>
 
             <Link
-              href={`/events/`}
+              href={`/events/${session.eventId}`}
               className="inline-flex items-center gap-3 bg-black text-white px-10 py-4 rounded-full font-bold text-base hover:bg-zinc-800 transition-all"
             >
               <ArrowLeft className="h-4 w-4" /> Back To Event
