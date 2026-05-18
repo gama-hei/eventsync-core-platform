@@ -147,25 +147,27 @@ export default function SessionsPage() {
                   <p className="text-gray-600 font-normal mb-6 leading-relaxed">
                     {session.description || "Aucune description disponible"}
                   </p>
-
-                  <div className="flex flex-wrap gap-8 mb-6 text-sm font-medium text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      {formatDate(session.startTime)}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      <span className="font-mono text-sm text-gray-600">
-                        {formatTime(session.startTime)}
-                      </span>
-                      <span className="text-gray-300">—</span>
-                      <span className="font-mono text-sm text-gray-500">
-                        {formatTime(session.endTime)}
-                      </span>
-                    </div>
-                  </div>
+                     <div className="flex flex-wrap gap-8 mb-12 text-sm font-medium text-gray-500">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />{" "}
+                {formatDate(session.startTime)}{" "}
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                <span className="font-mono text-sm text-gray-600">
+                  {formatTime(session.startTime)}
+                </span>
+                <span className="text-gray-300">—</span>
+                <span className="font-mono text-sm text-gray-500">
+                  {formatTime(session.endTime)}
+                </span>
+              </div>
+            
+            </div>
+                  
 
                   {/* Speakers */}
+                  
                   {session.speakers && session.speakers.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mb-6 text-sm font-medium text-gray-500">
                                             <div className="flex items-center gap-2">
