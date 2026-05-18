@@ -5,15 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import school.hei.event_sync.dto.request.CreateRoomRequest;
 import school.hei.event_sync.dto.request.UpdateRoomRequest;
-import school.hei.event_sync.dto.response.RoomResponse;
-import school.hei.event_sync.dto.response.RoomSessionsResponse;
-import school.hei.event_sync.dto.response.SessionResponse;
+import school.hei.event_sync.dto.response.*;
+import school.hei.event_sync.model.Question;
 import school.hei.event_sync.model.Room;
 import school.hei.event_sync.model.Session;
+import school.hei.event_sync.model.Speaker;
 import school.hei.event_sync.repository.RoomRepository;
 import school.hei.event_sync.repository.SessionRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import school.hei.event_sync.utils.DateUtils;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,8 +128,36 @@ public class RoomService {
         response.setEndTime(session.getEndTime().toLocalDateTime());
         response.setCapacity(session.getCapacity());
         response.setEventId(session.getEvent().getId());
+
+        if(session.getSpeakers() != null){
+            response.setSpeakers(session.getSpeakers().stream()
+                    .map(this::toSpeakerSummary)
+                    .toList());
+        }
+        if(session.getQuestions() != null){
+            response.setQuestions(session.getQuestions().stream()
+                    .map(this::toQuestionResponse)
+                    .toList());
+        }
         response.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
         response.setRoomName(session.getRoom() != null ? session.getRoom().getName() : null);
         return response;
+    }
+
+    private SpeakerSummary toSpeakerSummary(Speaker speaker) {
+        SpeakerSummary summary = new SpeakerSummary();
+        summary.setId(speaker.getId());
+        summary.setFullName(speaker.getFullName());
+        return summary;
+    }
+    private QuestionResponse toQuestionResponse(Question question) {
+        QuestionResponse dto = new QuestionResponse();
+        dto.setId(question.getId());
+        dto.setContent(question.getContent());
+        dto.setAuthorName(question.getAuthorName());
+        dto.setUpvotes(question.getUpvotes());
+        dto.setSessionId(question.getSession() != null ? question.getSession().getId() : null);
+        dto.setCreatedAt(DateUtils.fromTimestamp(question.getCreatedAt()));
+        return dto;
     }
 }

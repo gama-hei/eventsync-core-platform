@@ -116,6 +116,7 @@ public class SpeakerService {
         SessionSummary summary = new SessionSummary();
         summary.setId(session.getId());
         summary.setTitle(session.getTitle());
+        summary.setDescription(session.getDescription());
         summary.setStartTime(DateUtils.fromTimestamp(session.getStartTime()));
         summary.setEndTime(DateUtils.fromTimestamp(session.getEndTime()));
         summary.setRoomId(session.getRoom() != null ? session.getRoom().getId() : null);
