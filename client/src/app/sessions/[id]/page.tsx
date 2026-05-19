@@ -105,7 +105,7 @@ export default function SessionCards() {
         <section className="relative overflow-hidden rounded-3xl bg-[#FBFBFB] border border-gray-100 p-8 md:p-20 mb-20">
           <div className="relative z-10 max-w-2xl">
             <Button type="button" className="bg-transparent">
-              {live && <Radio className="text-red-500" />}
+              {live && <Radio className="text-red-500 !h-15 !w-15 animate-pulse " />}
             </Button>
 
             <div className="inline-flex items-center gap-2 mb-8">
