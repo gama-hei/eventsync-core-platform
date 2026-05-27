@@ -1,6 +1,5 @@
-import { Event, Session } from "@/types";
-
-const API_BASE_URL = "http://localhost:8080"
+import { Session } from "@/types";
+import { API_BASE_URL } from "@/lib/constants";
 
 export async function getEvents() {
   await new Promise((resolve) =>
