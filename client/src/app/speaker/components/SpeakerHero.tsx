@@ -8,7 +8,6 @@ export default function SpeakerHero({ speaker }: { speaker: Speaker }) {
 
   return (
     <div className="w-full text-white space-y-8 md:space-y-0 md:flex md:gap-8 items-center justify-between pb-12">
-      {/* Profil de gauche */}
       <div className="bg-[#1e232a] rounded-2xl p-8 flex flex-col items-center justify-center text-center w-full md:w-1/3 border border-slate-800 shadow-xl">
         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-700 mb-4">
           <img 
