@@ -10,9 +10,7 @@ on:
 jobs:
   ping-db:
     runs-on: ubuntu-latest
-    # ATTENTION : Remplacez "production" par le nom exact de votre environnement
-    # si vous l'avez nommé différemment sur l'interface GitHub
-    environment: aiven-db
+    environment: aiven-db 
 
     steps:
       - name: Ping PostgreSQL Aiven
@@ -20,8 +18,15 @@ jobs:
           # Installation du client postgresql
           sudo apt-get update && sudo apt-get install -y postgresql-client
 
-          # Connexion directe à Aiven en transmettant le mot de passe et l'URL simplifiée
+          # Récupération de l'URL depuis votre VRAIE variable GitHub
+          RAW_URL="${{ vars.SPRING_DATASOURCE_URL }}"
+
+          # Suppression du préfixe 'jdbc:' pour psql (devient postgresql://...)
+          CLEAN_URL=$(echo "$RAW_URL" | sed 's/^jdbc://')
+
+          echo "Connexion en cours vers Aiven..."
+
+          # Connexion directe à l'URL globale
           PGPASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" psql \
-            "${{ vars.DATABASE_URL }}" \
-            -U "${{ vars.SPRING_DATASOURCE_USERNAME }}" \
+            "$CLEAN_URL" \
             -c "SELECT 1;"
