@@ -10,32 +10,18 @@ on:
 jobs:
   ping-db:
     runs-on: ubuntu-latest
-    # ATTENTION : Remplacez "production" ci-dessous par le nom exact 
-    # de l'environnement GitHub que vous avez créé s'il a un autre nom.
-    environment: production 
+    # ATTENTION : Remplacez "production" par le nom exact de votre environnement
+    # si vous l'avez nommé différemment sur l'interface GitHub
+    environment: aiven-db
 
     steps:
-      - name: Parse JDBC and Ping PostgreSQL Aiven
+      - name: Ping PostgreSQL Aiven
         run: |
           # Installation du client postgresql
           sudo apt-get update && sudo apt-get install -y postgresql-client
 
-          # Récupération de l'URL depuis les VARIABLES (vars) et non les secrets
-          JDBC_URL="${{ vars.SPRING_DATASOURCE_URL }}"
-
-          # Extraction automatique de l'hôte, du port et du nom de la base
-          CLEAN_URL=$(echo "$JDBC_URL" | sed 's|jdbc:postgresql://||')
-          DB_HOST=$(echo "$CLEAN_URL" | cut -d':' -f1)
-          PORT_AND_DB=$(echo "$CLEAN_URL" | cut -d':' -f2)
-          DB_PORT=$(echo "$PORT_AND_DB" | cut -d'/' -f1)
-          DB_NAME=$(echo "$PORT_AND_DB" | cut -d'/' -f2 | cut -d'?' -f1)
-
-          echo "Connexion en cours vers l'hôte Aiven..."
-          
-          # Connexion en utilisant vars pour l'user/url et secrets pour le password
+          # Connexion directe à Aiven en transmettant le mot de passe et l'URL simplifiée
           PGPASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" psql \
-            -h "$DB_HOST" \
-            -p "$DB_PORT" \
+            "${{ vars.DATABASE_URL }}" \
             -U "${{ vars.SPRING_DATASOURCE_USERNAME }}" \
-            -d "$DB_NAME" \
             -c "SELECT 1;"
