@@ -23,6 +23,7 @@ import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import { isLive, getRoom, formatTime } from "@/app/events/[id]/page";
 import { text } from "stream/consumers";
+import { useFavorites } from "@/hooks/useFavorites";
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -41,7 +42,7 @@ export default function SessionCards() {
   const [error, setError] = useState<string | null>(null);
   const [rooms, setRooms] = useState([]);
   const [roomName, setRoomName] = useState("");
-  const [liked, setLiked] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     console.log("ID récupéré:", id);
@@ -107,15 +108,17 @@ export default function SessionCards() {
             <div className="inline-flex items-center gap-2 mb-8">
               <h1 className="text-sm font-bold uppercase p-2  bg-fill-button lg:text-2xl text-center border-background border-1 rounded-full text-button-blue">
                 Sessions Details
-              </h1>
+              </span>
               <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
                 Add to favorite
-                <Heart
-                  onClick={() => setLiked(!liked)}
-                  className={`h-6 w-6 cursor-pointer transition-colors ${
-                    liked ? "fill-red-500 text-red-500" : "text-gray-400"
-                  }`}
-                />
+               <Heart
+  onClick={() => session && toggleFavorite(session)}
+  className={`h-6 w-6 cursor-pointer transition-colors ${
+    session && isFavorite(session.id)
+      ? "fill-red-500 text-red-500"
+      : "text-gray-400"
+  }`}
+/>
               </div>
             </div>
             <h2 className="text-2xl md:text-5xl font-serif font-medium text-black mb-8 leading-tight tracking-tight">
