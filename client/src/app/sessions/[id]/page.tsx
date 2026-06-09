@@ -108,7 +108,7 @@ export default function SessionCards() {
             <div className="inline-flex items-center gap-2 mb-8">
               <h1 className="text-sm font-bold uppercase p-2  bg-fill-button lg:text-2xl text-center border-background border-1 rounded-full text-button-blue">
                 Sessions Details
-              </span>
+              </h1>
               <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
                 Add to favorite
                <Heart
