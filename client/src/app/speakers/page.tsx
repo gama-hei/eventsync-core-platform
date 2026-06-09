@@ -14,6 +14,51 @@ async function getSpeakers(): Promise<Speaker[]> {
   return res.json();
 }
 
+function getSocialLinkType(url: string): 'twitter' | 'linkedin' | 'github' | 'website' {
+  if (url.includes('twitter.com') || url.includes('x.com')) return 'twitter';
+  if (url.includes('linkedin.com')) return 'linkedin';
+  if (url.includes('github.com')) return 'github';
+  return 'website';
+}
+
+function SocialIcon({ url }: { url: string }) {
+  const type = getSocialLinkType(url);
+  
+  if (type === 'twitter') {
+    return (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    );
+  }
+  
+  if (type === 'linkedin') {
+    return (
+      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    );
+  }
+  
+  return <Globe className="h-4 w-4" />;
+}
+
+function getSocialName(url: string): string {
+  const type = getSocialLinkType(url);
+  if (type === 'twitter') return 'Twitter';
+  if (type === 'linkedin') return 'LinkedIn';
+  if (type === 'github') return 'GitHub';
+  return 'Website';
+}
+
+function getSocialColor(url: string): string {
+  const type = getSocialLinkType(url);
+  if (type === 'twitter') return 'hover:text-sky-500';
+  if (type === 'linkedin') return 'hover:text-blue-600';
+  if (type === 'github') return 'hover:text-gray-700';
+  return 'hover:text-gray-700';
+}
+
 export default async function SpeakersPage() {
   const speakers = await getSpeakers();
 
@@ -59,75 +104,71 @@ export default async function SpeakersPage() {
             
             return (
               <article key={speaker.id} className="group border-b border-gray-100 pb-8 last:border-0">
-                <Link href={`/speakers/${speaker.id}`}>
-                  <div className="flex flex-col md:flex-row md:items-start gap-6">
-                  
-                    <div className="flex-shrink-0">
+                <div className="flex flex-col md:flex-row md:items-start gap-6">
+                
+                  <div className="flex-shrink-0">
+                    <Link href={`/speakers/${speaker.id}`}>
                       <Image
                         src={profileImageUrl}
                         alt={speaker.fullName}
                         width={80}
                         height={80}
-                        className="rounded-full object-cover w-20 h-20 ring-2 ring-gray-100"
+                        className="rounded-full object-cover w-20 h-20 ring-2 ring-gray-100 cursor-pointer"
                       />
-                    </div>
+                    </Link>
+                  </div>
 
-                    <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0">
+                    <Link href={`/speakers/${speaker.id}`}>
                       <h2 className="text-2xl font-serif font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
                         {speaker.fullName}
                       </h2>
+                    </Link>
 
-                      {speaker.bio && (
-                        <p className="text-gray-500 leading-relaxed line-clamp-2 mb-4">
-                          {speaker.bio}
-                        </p>
-                      )}
+                    {speaker.bio && (
+                      <p className="text-gray-500 leading-relaxed line-clamp-2 mb-4">
+                        {speaker.bio}
+                      </p>
+                    )}
 
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
 
-                        <div className="flex items-center gap-1.5">
-                          <Mic2 className="h-4 w-4" />
-                          <span>
-                            {speaker.sessions?.length || 0} session
-                            {(speaker.sessions?.length || 0) > 1 ? "s" : ""}
-                          </span>
-                        </div>
-
-                        {speaker.externalLinks?.twitter && (
-                          <a href={speaker.externalLinks.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 hover:text-sky-500 transition-colors">
-                            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                            </svg>
-                            <span>Twitter</span>
-                          </a>
-                        )}
-
-                        {speaker.externalLinks?.linkedin && (
-                          <a href={speaker.externalLinks.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
-                            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                            <span>LinkedIn</span>
-                          </a>
-                        )}
-
-                        {speaker.externalLinks?.website && (
-                          <a href={speaker.externalLinks.website} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 hover:text-gray-700 transition-colors">
-                            <Globe className="h-4 w-4" />
-                            <span>Website</span>
-                          </a>
-                        )}
-
+                      <div className="flex items-center gap-1.5">
+                        <Mic2 className="h-4 w-4" />
+                        <span>
+                          {speaker.sessions?.length || 0} session
+                          {(speaker.sessions?.length || 0) > 1 ? "s" : ""}
+                        </span>
                       </div>
 
+                      {speaker.externalLinks && speaker.externalLinks.length > 0 && (
+                        <>
+                          {speaker.externalLinks.map((link, index) => (
+                            <a
+                              key={index}
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center gap-1.5 ${getSocialColor(link)} transition-colors`}
+                            >
+                              <SocialIcon url={link} />
+                              <span>{getSocialName(link)}</span>
+                            </a>
+                          ))}
+                        </>
+                      )}
+
+                    </div>
+
+                    <Link href={`/speakers/${speaker.id}`}>
                       <div className="flex items-center gap-1 text-indigo-600 font-medium mt-4 group-hover:gap-2 transition-all">
                         <span>View sessions</span>
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
-                    </div>
-
+                    </Link>
                   </div>
-                </Link>
+
+                </div>
               </article>
             );
           })}
