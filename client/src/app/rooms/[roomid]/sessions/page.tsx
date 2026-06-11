@@ -136,16 +136,13 @@ export default function SessionsPage() {
 
             {room.sessions && room.sessions.length > 0 ? (
               room.sessions.map((session: Session) => {
-                // Déclarer la variable live pour chaque session
                 const live = isLive(session.startTime, session.endTime);
-                // Récupérer l'état de like pour cette session
 
                 return (
                   <div
                     key={session.id}
                     className="border-1 border-card-last-bg p-8 first:border-t-0 rounded-xl"
                   >
-                    {/* Afficher le bouton live UNIQUEMENT si la session est en cours */}
                     {live && (
                       <Button type="button" className="bg-transparent mb-4 p-0">
                         <div className="flex items-center gap-2">
