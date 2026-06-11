@@ -26,11 +26,7 @@ export default function SessionsPage() {
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const {isFavorite, toggleFavorite} = useFavorites();
-
-  const [likedSessions, setLikedSessions] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     console.log("roomid:", roomid);
@@ -143,7 +139,6 @@ export default function SessionsPage() {
                 // Déclarer la variable live pour chaque session
                 const live = isLive(session.startTime, session.endTime);
                 // Récupérer l'état de like pour cette session
-                const isLiked = likedSessions[session.id] || false;
 
                 return (
                   <div
@@ -167,15 +162,14 @@ export default function SessionsPage() {
                         {session.title}
                       </span>
                       <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base transition-all">
-                
-                                 <Heart
-onClick={() => session && toggleFavorite(session)}
-className={`h-6 w-6 cursor-pointer transition-colors ${
-session && isFavorite(session.id)
-? "fill-red-500 text-red-500"
-: "text-gray-400"
-}`}
-/>
+                        <Heart
+                          onClick={() => session && toggleFavorite(session)}
+                          className={`h-6 w-6 cursor-pointer transition-colors ${
+                            session && isFavorite(session.id)
+                              ? "fill-red-500 text-red-500"
+                              : "text-gray-400"
+                          }`}
+                        />
                       </div>
                     </div>
 
