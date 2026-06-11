@@ -1,6 +1,14 @@
 export interface Speaker {
   id: string;
   fullName: string;
+   profilePicture?: string;
+  bio: string;
+  externalLinks: {
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
+  sessions: string[];
 }
 
 export interface Session {
@@ -10,6 +18,7 @@ export interface Session {
   startTime: string;
   endTime: string;
   roomName: string;
+  roomId:string;
   capacity: number;
   eventId: string;
   eventTitle: string;
@@ -23,4 +32,12 @@ export interface Event {
   startDate: string;
   endDate: string;
   location: string;
+  sessions?: Session[];
 }
+export interface Room {
+  id: string;
+  name: string;
+  capacity: number;
+  location : string;
+}
+

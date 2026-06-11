@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class SessionSummary {
     private String id;
     private String title;
+    private String description;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String roomId;
