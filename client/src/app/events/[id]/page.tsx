@@ -41,7 +41,7 @@ export async function getRoom(): Promise<Room[] | null> {
     return null;
   }
 }
-console.log(getRoom());
+
 
 
 
@@ -77,7 +77,7 @@ export default async function EventPage({ params }: EventPageProps) {
   const event = await getEvent(id);
   const rooms = await getRoom();
 
-  console.log(rooms);
+ 
 
   if (!event) notFound();
 

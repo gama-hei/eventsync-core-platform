@@ -12,10 +12,10 @@ export function Header() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="/schedule"
+            href="/speakers"
             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
           >
-            Schedule
+            Speakers
           </Link>
           <Link
             href="/rooms"

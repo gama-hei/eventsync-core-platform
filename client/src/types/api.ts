@@ -3,8 +3,10 @@ export type UUID = string;
 export type ISODataString = string;
 
 export interface Room {
-  id: UUID;
-  name: string;
+  roomId: UUID;
+  roomName: string;
+  capacity: number;
+  location: string;
 }
 
 export interface Speaker {
