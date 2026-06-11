@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -20,35 +21,37 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public void run(String... args) {
-        organizerRepository.deleteAll();
-        log.info(" Tous les organisateurs ont été supprimés");
+        if (organizerRepository.findByEmail("admin@eventsync.com") == null) {
+            String email = "admin@eventsync.com";
+            String plainPassword = "admin123";
+            String encodedPassword = passwordEncoder.encode(plainPassword);
 
-        String email = "admin@eventsync.com";
-        String plainPassword = "admin123";
-        String encodedPassword = passwordEncoder.encode(plainPassword);
+            log.info("Creating admin user:");
+            log.info("   Email: {}", email);
+            log.info("   Password: {}", plainPassword);
+            log.info("   Generated hash: {}", encodedPassword);
 
-        log.info(" Création de l'admin:");
-        log.info("   Email: {}", email);
-        log.info("   Mot de passe: {}", plainPassword);
-        log.info("   Hash généré: {}", encodedPassword);
+            Organizer organizer = Organizer.builder()
+                    .email(email)
+                    .password(encodedPassword)
+                    .fullName("Administrator")
+                    .isActive(true)
+                    .createdAt(Timestamp.from(Instant.now()))
+                    .build();
 
-        Organizer organizer = Organizer.builder()
-                .email(email)
-                .password(encodedPassword)
-                .fullName("Administrator")
-                .isActive(true)
-                .createdAt(Timestamp.from(Instant.now()))
-                .build();
+            organizerRepository.save(organizer);
 
-        organizerRepository.save(organizer);
-
-        Organizer saved = organizerRepository.findByEmail(email);
-        if (saved != null) {
-            log.info("Admin créé avec succès!");
-            log.info("   Vérification mot de passe: {}", passwordEncoder.matches(plainPassword, saved.getPassword()));
+            Organizer saved = organizerRepository.findByEmail(email);
+            if (saved != null) {
+                log.info("Admin created successfully!");
+                log.info("   Password verification: {}", passwordEncoder.matches(plainPassword, saved.getPassword()));
+            } else {
+                log.error("Failed to create admin user");
+            }
         } else {
-            log.error(" echec de la création de l'admin");
+            log.info("Admin already exists in database");
         }
     }
 }
