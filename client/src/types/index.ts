@@ -35,8 +35,8 @@ export interface Event {
   sessions?: Session[];
 }
 export interface Room {
-  roomId: string;
-  roomName: string;
+  id: string;
+  name: string;
   capacity: number;
   location : string;
 }
