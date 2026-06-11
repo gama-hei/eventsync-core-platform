@@ -1,6 +1,7 @@
 "use client";
 
 import { UpvoteButton } from "@/components/UpvoteButton";
+import { useFavorites } from "@/hooks/useFavorites";
 import { API_BASE_URL } from "@/lib/constants";
 import {
   ArrowLeft,
@@ -10,7 +11,8 @@ import {
   Mic2,
   Radio,
   Send,
-  Users
+  Users,
+  Heart
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -102,7 +104,7 @@ export default function SessionPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
-
+  const {isFavorite, toggleFavorite} = useFavorites();
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -313,8 +315,19 @@ export default function SessionPage() {
                 </div>
               </Link>
             ))}
+            
           </div>
+          <div className="inline-flex gap-2 mt-auto pt-5"> <p className="text-xl black">Add to Favorite</p>          <Heart
+onClick={() => session && toggleFavorite(session)}
+className={`h-6 w-6 cursor-pointer transition-colors ${
+session && isFavorite(session.id)
+? "fill-red-500 text-red-500"
+: "text-gray-400"
+}`}
+/></div>
+
         </div>
+        
       )}
       {live ? (
         <div className="border-t border-gray-100 pt-10">
