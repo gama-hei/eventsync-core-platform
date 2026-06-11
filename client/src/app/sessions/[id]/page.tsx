@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Session } from "@/types/types";
+import { Session, Event } from "@/types/types";
 import { Divide, Speaker } from "lucide-react";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -23,7 +23,7 @@ import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import { isLive, getRoom, formatTime } from "@/app/events/[id]/page";
 import { text } from "stream/consumers";
-import { useFavorites } from "@/hooks/useFavorites";
+import { Room } from "@/types";
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -40,12 +40,11 @@ export default function SessionCards() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<Room | null>(null);
   const [roomName, setRoomName] = useState("");
-  const { isFavorite, toggleFavorite } = useFavorites();
+
 
   useEffect(() => {
-    console.log("ID récupéré:", id);
     if (id) {
       fetch(`${API_BASE_URL}/sessions/${id}`)
         .then((response) => {
@@ -77,11 +76,14 @@ export default function SessionCards() {
   }, []);
 
   useEffect(() => {
-    if (session && rooms.length > 0) {
+    if (session && rooms?.length > 0) {
+      // ✅ L'optional chaining retourne undefined au lieu d'erreur
       const room = rooms.find((r) => r.id === session.roomId);
       setRoomName(room?.name || "Salle non trouvée");
+      setRoomid(session.roomId);
     }
   }, [session, rooms]);
+  console.log(roomid);
 
   if (loading) {
     return;
@@ -102,23 +104,21 @@ export default function SessionCards() {
         <section className="relative overflow-hidden rounded-3xl bg-[#FBFBFB] border border-card-last-bg p-8 md:p-20 mb-20">
           <div className="relative z-10 max-w-2xl">
             <Button type="button" className="bg-transparent">
-              {live && <Radio className="text-red-500" />}
+              {live && <Radio className="text-red-500 !h-15 !w-15 animate-pulse " />}
             </Button>
 
             <div className="inline-flex items-center gap-2 mb-8">
               <h1 className="text-sm font-bold uppercase p-2  bg-fill-button lg:text-2xl text-center border-background border-1 rounded-full text-button-blue">
                 Sessions Details
-              </h1>
+              </span>
               <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base  transition-all">
                 Add to favorite
-               <Heart
-  onClick={() => session && toggleFavorite(session)}
-  className={`h-6 w-6 cursor-pointer transition-colors ${
-    session && isFavorite(session.id)
-      ? "fill-red-500 text-red-500"
-      : "text-gray-400"
-  }`}
-/>
+                <Heart
+                  onClick={() => setLiked(!liked)}
+                  className={`h-6 w-6 cursor-pointer transition-colors ${
+                    liked ? "fill-red-500 text-red-500" : "text-gray-400"
+                  }`}
+                />
               </div>
             </div>
             <h2 className="text-2xl md:text-5xl font-serif font-medium text-black mb-8 leading-tight tracking-tight">
@@ -159,9 +159,29 @@ export default function SessionCards() {
                 <p  className="text-xl text-gray-800 font-normal mb-10 leading-relaxed italic border-2 border-card-last-bg rounded-xl p-3">
               {session.description}
             </p>
-              </div>     
-          
+            <div className="flex flex-wrap gap-8 mb-12 text-sm font-medium text-gray-500">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />{" "}
+                {formatDate(session.startTime)}{" "}
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                <span className="font-mono text-sm text-gray-600">
+                  {formatTime(session.startTime)}
+                </span>
+                <span className="text-gray-300">—</span>
+                <span className="font-mono text-sm text-gray-500">
+                  {formatTime(session.endTime)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
 
+                <Link href={`/rooms/${roomid}/sessions`} className="underline">
+                  {roomName}
+                </Link>
+              </div>
+            </div>
             <div className="flex flex-wrap gap-2 mb-12 text-sm font-medium text-gray-500">
               <div className="flex items-center gap-2">
                 <Mic2 className="h-6 w-6 text-card-last-bg group-hover:text-gray-600 transition-colors" />

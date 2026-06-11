@@ -27,7 +27,9 @@ export interface Event {
   sessions?: Session[];
 }
 export interface Room {
-  id: string;
-  name: string;
+  roomId: string;
+  roomName: string;
+  capacity: number;
+  location : string;
 }
 
