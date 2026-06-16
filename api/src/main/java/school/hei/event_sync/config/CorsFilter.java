@@ -23,7 +23,7 @@ public class CorsFilter implements Filter {
             "http://localhost:3000",
             "http://localhost:5173",
             "http://localhost:4200",
-            "https://gama-hei.github.io/admin-event-sync/"
+            "https://gama-hei.github.io"
     );
 
     @Override
