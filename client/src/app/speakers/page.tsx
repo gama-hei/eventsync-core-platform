@@ -63,15 +63,15 @@ export default async function SpeakersPage() {
   const speakers = await getSpeakers();
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-12">
+    <main className="max-w-4xl mx-auto px-6 py-12 ">
 
       <div className="mb-8">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <Home className="h-4 w-4" />
-          Back to Home
+          <Home className="h-7 w-7" />
+         <span className="text-2xl"> Back to Home </span>
         </Link>
       </div>
 
@@ -93,45 +93,45 @@ export default async function SpeakersPage() {
       {speakers.length === 0 ? (
         <div className="text-center py-20 bg-gray-50 rounded-2xl">
           <p className="text-gray-400 mb-4">No speakers available</p>
-          <Link href="/" className="inline-block text-indigo-600 hover:text-indigo-700 font-medium">
+          <Link href="/" className="inline-block text-indigo-600 hover:text-indigo-700 font-medium ">
             Back to home
           </Link>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-8 flex flex-wrap gap-10">
           {speakers.map((speaker) => {
             const profileImageUrl = speaker.profilePicture || '/images/default-avatar.jpg';
             
             return (
-              <article key={speaker.id} className="group border-b border-gray-100 pb-8 last:border-0">
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
+              <article key={speaker.id} className="group border-b rounded border-gray-100 pb-8 last:border-0 transition-all duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                <div className="grid grid-col md:flex-row md:items-start gap-6">
                 
-                  <div className="flex-shrink-0">
+                  <div className="mx-auto z-10 ">
                     <Link href={`/speakers/${speaker.id}`}>
                       <Image
                         src={profileImageUrl}
                         alt={speaker.fullName}
-                        width={80}
-                        height={80}
+                        width={100}
+                        height={100}
                         className="rounded-full object-cover w-20 h-20 ring-2 ring-gray-100 cursor-pointer"
                       />
                     </Link>
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 bg-fill-back mt-[-4rem] pt-10 px-5 pb-5 border-1 border-fill-back rounded ">
                     <Link href={`/speakers/${speaker.id}`}>
-                      <h2 className="text-2xl font-serif font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
+                      <h2 className="text-2xl font-serif font-semibold text-white group-hover:text-indigo-600 transition-colors mb-2 text-center">
                         {speaker.fullName}
                       </h2>
                     </Link>
 
                     {speaker.bio && (
-                      <p className="text-gray-500 leading-relaxed line-clamp-2 mb-4">
+                      <p className="text-gray-700 leading-relaxed line-clamp-2 mb-4 w-48 group-hover:text-white">
                         {speaker.bio}
                       </p>
                     )}
 
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-white group-hover:text-gray-700">
 
                       <div className="flex items-center gap-1.5">
                         <Mic2 className="h-4 w-4" />
@@ -161,8 +161,8 @@ export default async function SpeakersPage() {
                     </div>
 
                     <Link href={`/speakers/${speaker.id}`}>
-                      <div className="flex items-center gap-1 text-indigo-600 font-medium mt-4 group-hover:gap-2 transition-all">
-                        <span>View sessions</span>
+                      <div className="flex items-center gap-1 text-white font-medium mt-4 group-hover:gap-2 transition-all group-hover:text-indigo-600">
+                        <span >View more</span>
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </Link>

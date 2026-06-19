@@ -60,7 +60,8 @@
   --color-input-placeholder: var(--input-placeholder);
   --color-card-bg-session: var(--card-bg-session);
   --color-button-blue: var(--button-blue);
-  --color-fill-button: var(--fill-button)
+  --color-fill-button: var(--fill-button);
+  --color-fill-back:var(--fill-back)
 }
 
 :root {
@@ -103,6 +104,7 @@
   --card-bg-session: #2D3640;
   --button-blue:#8CC6FD;
   --fill-button:#696BE8;
+  --fill-back:#5981b6;
 }
 
 .dark {
