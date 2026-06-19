@@ -31,8 +31,8 @@ export default async function RoomsPage() {
           href="/"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <Home className="h-4 w-4" />
-          Back to Home
+         <Home className="h-7 w-7" />
+         <span className="text-2xl"> Back to Home </span>
         </Link>
       </div>
 
@@ -59,13 +59,13 @@ export default async function RoomsPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className=" space-y-8 flex flex-wrap gap-9">
           {rooms.map((room) => {
             
             
             return (
-              <article key={room.id} className="group border-b border-gray-100 pb-8 last:border-0">
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
+              <article key={room.id} className="group border-b rounded border-fill-back pb-8 last:border-0 transition-all duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl">
+                <div className="flex flex-col md:flex-row md:items-start gap-6 p-5 ">
                 
                  
 

@@ -118,7 +118,7 @@ export default async function SpeakersPage() {
                     </Link>
                   </div>
 
-                  <div className="flex-1 min-w-0 bg-fill-back mt-[-4rem] pt-10 px-5 pb-5 border-1 border-fill-back rounded ">
+                  <div className="flex-1 min-w-0 bg-fill-back mt-[-4rem] pt-10 px-5 pb-5 border-1 border-fill-back rounded-xl ">
                     <Link href={`/speakers/${speaker.id}`}>
                       <h2 className="text-2xl font-serif font-semibold text-white group-hover:text-indigo-600 transition-colors mb-2 text-center">
                         {speaker.fullName}
