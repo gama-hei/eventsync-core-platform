@@ -223,12 +223,12 @@ export default function SpeakerPage() {
                       </h3>
 
                       {session.description && (
-                        <p className="text-gray-500 line-clamp-2 mb-4">
+                        <p className="text-gray-800 line-clamp-2 mb-4">
                           {session.description}
                         </p>
                       )}
 
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-700">
                         <div className="flex items-center gap-1.5">
                           <Calendar className="h-4 w-4" />
                           <span>{formatDate(session.startTime)}</span>
