@@ -99,8 +99,8 @@ export default function SpeakerPage() {
           href="/speakers"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to All Speakers
+          <ArrowLeft className="h-7 w-7" />
+           <span className="text-2xl">Back to All Speakers</span>
         </Link>
       </div>
 
@@ -184,8 +184,8 @@ export default function SpeakerPage() {
 
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <div className="flex items-center gap-2">
-                <Mic2 className="h-5 w-5" />
-                <span>
+                <Mic2 className="h-9 w-9" />
+                <span className="text-xl">
                   {sessions.length} session{sessions.length > 1 ? "s" : ""}
                 </span>
               </div>
@@ -196,23 +196,24 @@ export default function SpeakerPage() {
 
       {sessions.length > 0 && (
         <section>
-          <div className="mb-8">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-8 h-px bg-indigo-600" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
-                Sessions
-              </span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
-              Sessions by {speaker.fullName}
-            </h2>
-          </div>
+         <div className="mb-8 flex justify-center">
+  <div className="inline-flex items-center gap-2 mb-4 flex-wrap justify-center">
+    <span className="w-17 h-[9px] bg-indigo-600" />
+    <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
+      Look the Sessions with
+    </span>
+    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-gray-900">
+      {speaker.fullName}
+    </h2>
+    <span className="w-17 h-[9px] bg-indigo-600" />
+  </div>
+</div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {sessions.map((session) => (
               <article
                 key={session.id}
-                className="group border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all"
+                className="group border border-gray-100 rounded-2xl p-6  transition-all shadow-none hover:shadow-2xl hover:shadow-fill-back transition-shadow duration-300"
               >
                 <Link href={`/sessions/${session.id}`}>
                   <div className="flex flex-col md:flex-row md:items-start gap-4">
