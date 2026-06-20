@@ -89,8 +89,8 @@ export default async function EventPage({ params }: EventPageProps) {
             href="/events"
             className=" inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-8"
           >
-            <ArrowLeft className="h-8 w-8" />
-<span className="text-2xl text-black">All Event </span>
+            <ArrowLeft className="h-8 w-8 text-indigo-600" />
+<span className="text-2xl text-indigo-600 font-bold">All Event </span>
            
           </Link>
     
