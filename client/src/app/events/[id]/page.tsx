@@ -11,6 +11,7 @@ import {
   MapPin,
   Mic2,
   Users,
+  Home,
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,9 +42,6 @@ export async function getRoom(): Promise<Room[] | null> {
     return null;
   }
 }
-
-
-
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -77,8 +75,6 @@ export default async function EventPage({ params }: EventPageProps) {
   const event = await getEvent(id);
   const rooms = await getRoom();
 
- 
-
   if (!event) notFound();
 
   const sessions = event.sessions || [];
@@ -90,22 +86,25 @@ export default async function EventPage({ params }: EventPageProps) {
         <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
           <Link
             href="/events"
-            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-8"
+            className=" inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-8"
           >
-            <ArrowLeft className="h-4 w-4" />
-            All events
-          </Link>
+            <ArrowLeft className="h-8 w-8" />
 
+            <span className="text-2xl group-hover:text-gray-600 text-indigo-600 ">
+              All Event
+            </span>
+          </Link>
+    
           <div className="flex flex-wrap items-center gap-3 mb-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 rounded-full text-sm">
-              <Calendar className="h-4 w-4 text-gray-500" />
-              <span className="text-gray-600 font-mono text-sm">
+              <Calendar className="h-4 w-4 text-black-400 " />
+              <span className="text-black-400 font-mono text-sm">
                 {formatDate(event.startDate)} – {formatDate(event.endDate)}
               </span>
             </div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/5 rounded-full text-sm">
-              <MapPin className="h-4 w-4 text-gray-500" />
-              <span className="text-gray-600">{event.location}</span>
+              <MapPin className="h-4 w-4 text-black-400 " />
+              <span className="text-black-400 ">{event.location}</span>
             </div>
           </div>
 
@@ -123,7 +122,7 @@ export default async function EventPage({ params }: EventPageProps) {
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-xs text-gray-400 font-medium uppercase tracking-wide">
+                <div className="text-xs text-gray-600 font-medium uppercase tracking-wide">
                   Total Sessions
                 </div>
                 <div className="text-xl font-semibold text-black">
@@ -162,11 +161,11 @@ export default async function EventPage({ params }: EventPageProps) {
             <h2 className="text-2xl font-serif font-semibold text-black tracking-tight">
               Schedule
             </h2>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-xl text-indigo-900  mt-1">
               All sessions for this event
             </p>
           </div>
-          <div className="text-sm text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
+          <div className="text-sm text-gray-900 bg-gray-300 px-3 py-1 rounded-full">
             {sessions.length} sessions
           </div>
         </div>
@@ -182,7 +181,7 @@ export default async function EventPage({ params }: EventPageProps) {
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100 border-t border-gray-100">
+          <div className="divide-y divide-gray-100 border-t border-gray-400">
             {sessions.map((session, index) => {
               const room = rooms?.find((room) => room.id === session.roomId);
               const live = isLive(session.startTime, session.endTime);
@@ -196,16 +195,16 @@ export default async function EventPage({ params }: EventPageProps) {
                     <div className="flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/4">
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
-                          <span className="font-mono text-sm text-gray-600">
+                          <Clock className="h-4 w-4 text-black-400  group-hover:text-gray-600 transition-colors" />
+                          <span className="font-mono text-sm text-black-400 ">
                             {formatTime(session.startTime)}
                           </span>
                           <span className="text-gray-300">—</span>
-                          <span className="font-mono text-sm text-gray-500">
+                          <span className="font-mono text-sm text-black-400 ">
                             {formatTime(session.endTime)}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-400">
+                        <div className="flex items-center gap-1.5 mt-2 text-sm text-indigo-600 ">
                           <DoorOpen className="h-3.5 w-3.5" />
 
                           <span className="text-sm">
@@ -231,7 +230,7 @@ export default async function EventPage({ params }: EventPageProps) {
                             <h3 className="text-xl font-semibold text-black group-hover:text-indigo-600 transition-colors">
                               {session.title}
                             </h3>
-                            <p className="text-gray-500 text-sm leading-relaxed mt-1 line-clamp-2">
+                            <p className="text-gray-700 text-sm leading-relaxed mt-1 line-clamp-2">
                               {session.description ||
                                 "No description available"}
                             </p>
