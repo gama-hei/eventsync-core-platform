@@ -22,7 +22,7 @@ export default function FavoritesPage() {
           href="/"
           className="inline-flex items-center gap-2 text-sm text-black-500 hover:text-black-900 transition-colors"
         >
-          <Home className="h-4 w-4" />
+          <Home className="h-7 w-7" />
          <span className="text-2xl"> Back to Home</span> 
         </Link>
       </div>      <div className="mb-10">

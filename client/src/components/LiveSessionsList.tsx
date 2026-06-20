@@ -23,13 +23,13 @@ export function LiveSessionsList({
   if (sessions.length === 0) {
     return (
       <div className="py-20 flex flex-col items-center justify-center text-center">
-        <SearchX className="h-10 w-10 text-gray-200 mb-4" />
+        <SearchX className="h-10 w-10 text-gray-400 mb-4" />
 
         <h4 className="text-lg font-bold text-gray-900 mb-1">
           Quiet for now
         </h4>
 
-        <p className="text-gray-500 text-sm max-w-xs mx-auto font-serif italic">
+        <p className="text-gray-900 text-m max-w-xs mx-auto font-serif italic">
           Check the full schedule to see what's coming up next.
         </p>
       </div>
