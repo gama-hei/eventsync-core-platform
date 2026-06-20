@@ -71,7 +71,7 @@ export default async function SpeakersPage() {
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
           <Home className="h-7 w-7" />
-         <span className="text-2xl"> Back to Home </span>
+         <span className="text-2xl text-black"> Back to Home </span>
         </Link>
       </div>
 
@@ -85,7 +85,7 @@ export default async function SpeakersPage() {
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
           All Speakers
         </h1>
-        <p className="text-gray-500 text-lg">
+        <p className="text-gray-900 text-lg">
           {speakers.length} speaker{speakers.length > 1 ? "s" : ""} at this event
         </p>
       </div>
