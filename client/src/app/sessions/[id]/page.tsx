@@ -1,10 +1,11 @@
 "use client";
 
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { UpvoteButton } from "@/components/UpvoteButton";
 import { useFavorites } from "@/hooks/useFavorites";
 import { API_BASE_URL } from "@/lib/constants";
 import {
-  ArrowLeft,
+ 
   Calendar,
   Clock,
   DoorOpen,
@@ -12,7 +13,8 @@ import {
   Radio,
   Send,
   Users,
-  Heart
+  Heart,
+  Home
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -139,6 +141,7 @@ export default function SessionPage() {
         try {
           const res = await fetch(`${API_BASE_URL}/rooms/${session.roomId}`);
           const room: Room = await res.json();
+      
           setRoomName(room.name);
         } catch (err) {
           console.error("Failed to load room", err);
@@ -194,13 +197,11 @@ export default function SessionPage() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
-      </div>
-    );
-  }
+
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
 
   if (error || !session) {
     return (
@@ -211,7 +212,8 @@ export default function SessionPage() {
             href="/"
             className="text-indigo-600 hover:underline mt-4 inline-block"
           >
-            ← Back to home
+            <Home className="h-7 w-7" />
+         <span className="text-2xl"> Back to Home </span>
           </Link>
         </div>
       </div>
@@ -229,8 +231,10 @@ export default function SessionPage() {
           href={`/events/${session.eventId}`}
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to event
+         
+          
+            <Home className="h-7 w-7" />
+         <span className="text-2xl">Back to event </span>
         </Link>
       </div>
       {live && (
@@ -256,36 +260,42 @@ export default function SessionPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6 bg-gray-50 rounded-2xl mb-10">
         <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-gray-400" />
+          <Calendar className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Date</p>
+            <p className="text-xs text-indigo-800 uppercase">Date</p>
             <p className="text-sm font-medium text-gray-900">
               {formatDate(session.startTime)}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Clock className="h-5 w-5 text-gray-400" />
+          <Clock className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Time</p>
+            <p className="text-xs text-indigo-800 uppercase">Time</p>
             <p className="text-sm font-medium text-gray-900">
               {formatTime(session.startTime)} — {formatTime(session.endTime)}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <DoorOpen className="h-5 w-5 text-gray-400" />
+          <DoorOpen className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Room</p>
-            <p className="text-sm font-medium text-gray-900">
+            <Link
+           href={`/rooms/${session.roomId}/sessions`}
+            className="text-indigo-600  mt-4 inline-block hover:underline"
+          >
+             <p className="text-xs text-indigo-800 uppercase ">Room</p>
+            <p className="text-sm font-medium text-gray-900 ">
               {roomName || "TBD"}
             </p>
+          </Link>
+           
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Users className="h-5 w-5 text-gray-400" />
+          <Users className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Capacity</p>
+            <p className="text-xs text-indigo-800 uppercase">Capacity</p>
             <p className="text-sm font-medium text-gray-900">
               {session.capacity || "Unlimited"}
             </p>

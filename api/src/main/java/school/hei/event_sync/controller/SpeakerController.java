@@ -22,6 +22,7 @@ public class SpeakerController {
 
     @GetMapping("/{speakerId}")
     public ResponseEntity<SpeakerResponse> getSpeaker(@PathVariable String speakerId) {
+        System.out.println("CONTROLLER ATTEINT - id=" + speakerId);
         return ResponseEntity.ok(speakerService.getSpeakerById(speakerId));
     }
 }

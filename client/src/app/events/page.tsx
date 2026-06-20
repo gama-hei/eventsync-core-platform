@@ -34,25 +34,25 @@ export default async function EventsPage() {
       <div className="mb-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-black-500 hover:text-black-900 transition-colors"
         >
-          <Home className="h-4 w-4" />
-          Back to Home
+           <Home className="h-7 w-7" />
+         <span className="text-2xl text-black"> Back to Home </span>
         </Link>
       </div>
 
       <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-indigo-600 mb-4 tracking-tight">
           All Events
         </h1>
-        <p className="text-gray-500 text-lg">
+        <p className="text-gray-900 text-lg">
           Discover conferences, workshops, and meetups
         </p>
       </div>
 
       {events.length === 0 ? (
-        <div className="text-center py-20 bg-gray-50 rounded-2xl">
-          <p className="text-gray-400">No events available</p>
+        <div className="text-center py-20 bg-black-50 rounded-2xl">
+          <p className="text-black-400">No events available</p>
           <Link
             href="/"
             className="inline-block mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
@@ -63,23 +63,23 @@ export default async function EventsPage() {
       ) : (
         <div className="space-y-12">
           {events.map((event) => (
-            <article key={event.id} className="group border-b border-gray-100 pb-8 last:border-0">
+            <article key={event.id} className="group border-b border-black-100 pb-8 last:border-0">
               <Link href={`/events/${event.id}`}>
                 <div className="flex flex-col md:flex-row md:items-start gap-4">
                   <div className="md:w-1/4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-600">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black-100 rounded-full text-sm text-black-600">
                       <Calendar className="h-3.5 w-3.5" />
                       <span className="font-medium">{formatDate(event.startDate)}</span>
                     </div>
                   </div>
                   <div className="md:w-3/4">
-                    <h2 className="text-2xl md:text-3xl font-serif font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
+                    <h2 className="text-2xl md:text-3xl font-serif font-semibold text-black-900 group-hover:text-indigo-600 transition-colors mb-2">
                       {event.title}
                     </h2>
-                    <p className="text-gray-500 leading-relaxed line-clamp-2">
+                    <p className="text-black-500 leading-relaxed line-clamp-2">
                       {event.description}
                     </p>
-                    <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-400">
+                    <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-black-400">
                       <div className="flex items-center gap-1.5">
                         <MapPin className="h-4 w-4" />
                         <span>{event.location}</span>

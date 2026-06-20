@@ -18,6 +18,7 @@ import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import Image from "next/image";
 import { Speaker, Session } from "@/types";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -59,16 +60,11 @@ export default function SpeakerPage() {
     }
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="text-center py-20">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
-          <p className="mt-4 text-gray-500">Loading speaker details...</p>
-        </div>
-      </div>
-    );
-  }
+
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
 
   if (error || !speaker) {
     return (
@@ -99,8 +95,9 @@ export default function SpeakerPage() {
           href="/speakers"
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to All Speakers
+          <ArrowLeft className="h-7 w-7" />
+          <span className="text-2xl text-black">  Back to All Speakers </span>
+         
         </Link>
       </div>
 
@@ -120,8 +117,8 @@ export default function SpeakerPage() {
 
           <div className="flex-1">
             <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-8 h-px bg-indigo-600" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
+              <span className="w-10 h-2 bg-indigo-600" />
+              <span className="text-2xl font-bold uppercase tracking-[0.2em] text-indigo-600">
                 Speaker
               </span>
             </div>
@@ -131,7 +128,7 @@ export default function SpeakerPage() {
             </h1>
 
             {speaker.bio && (
-              <p className="text-gray-600 leading-relaxed text-lg mb-6">
+              <p className="text-black leading-relaxed text-lg mb-6">
                 {speaker.bio}
               </p>
             )}
@@ -146,7 +143,7 @@ export default function SpeakerPage() {
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-blue-50 rounded-full text-gray-700 hover:text-blue-600 transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-blue-50 rounded-full text-black hover:text-blue-600 transition-colors"
                       >
                         <span className="text-sm">LinkedIn</span>
                       </a>
@@ -171,7 +168,7 @@ export default function SpeakerPage() {
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-black transition-colors"
                       >
                         <Globe className="h-4 w-4" />
                         <span className="text-sm">Website</span>
@@ -182,10 +179,10 @@ export default function SpeakerPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center gap-6 text-sm text-black">
               <div className="flex items-center gap-2">
-                <Mic2 className="h-5 w-5" />
-                <span>
+                <Mic2 className="h-10 w-10" />
+                <span className="text-2xl">
                   {sessions.length} session{sessions.length > 1 ? "s" : ""}
                 </span>
               </div>
@@ -198,12 +195,12 @@ export default function SpeakerPage() {
         <section>
           <div className="mb-8">
             <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-8 h-px bg-indigo-600" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
+               <span className="w-10 h-2 bg-indigo-600" />
+              <span className="text-2xl font-bold uppercase tracking-[0.2em] text-indigo-600">
                 Sessions
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-900">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-black">
               Sessions by {speaker.fullName}
             </h2>
           </div>
@@ -212,22 +209,22 @@ export default function SpeakerPage() {
             {sessions.map((session) => (
               <article
                 key={session.id}
-                className="group border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all"
+                className="group border border-gray-400 rounded-2xl p-6 hover:shadow-lg transition-all"
               >
                 <Link href={`/sessions/${session.id}`}>
                   <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-serif font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">
+                      <h3 className="text-xl font-serif font-semibold text-black group-hover:text-indigo-600 transition-colors mb-2">
                         {session.title}
                       </h3>
 
                       {session.description && (
-                        <p className="text-gray-500 line-clamp-2 mb-4">
+                        <p className="text-black line-clamp-2 mb-4">
                           {session.description}
                         </p>
                       )}
 
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                      <div className="flex flex-wrap gap-4 text-sm text-black">
                         <div className="flex items-center gap-1.5">
                           <Calendar className="h-4 w-4" />
                           <span>{formatDate(session.startTime)}</span>
@@ -269,8 +266,8 @@ export default function SpeakerPage() {
 
       {sessions.length === 0 && (
         <div className="text-center py-20 bg-gray-50 rounded-2xl">
-          <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-400">
+          <Users className="h-12 w-12 text-black mx-auto mb-4" />
+          <p className="text-black">
             No sessions scheduled for this speaker yet.
           </p>
         </div>
