@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { UpvoteButton } from "@/components/UpvoteButton";
 import { useFavorites } from "@/hooks/useFavorites";
 import { API_BASE_URL } from "@/lib/constants";
@@ -196,13 +197,11 @@ export default function SessionPage() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
-      </div>
-    );
-  }
+
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
 
   if (error || !session) {
     return (

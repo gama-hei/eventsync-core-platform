@@ -18,6 +18,7 @@ import {
   Radio,
 } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 export default function SessionsPage() {
   const params = useParams();
@@ -86,12 +87,10 @@ export default function SessionsPage() {
     });
   };
 
-  if (loading)
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-12 text-center">
-        Chargement...
-      </div>
-    );
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
   if (error)
     return (
       <div className="max-w-6xl mx-auto px-6 py-12 text-center text-red-600">

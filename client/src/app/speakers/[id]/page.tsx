@@ -18,6 +18,7 @@ import { useParams } from "next/navigation";
 import { API_BASE_URL } from "@/lib/constants";
 import Image from "next/image";
 import { Speaker, Session } from "@/types";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -59,16 +60,11 @@ export default function SpeakerPage() {
     }
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="text-center py-20">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
-          <p className="mt-4 text-gray-500">Loading speaker details...</p>
-        </div>
-      </div>
-    );
-  }
+
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
 
   if (error || !speaker) {
     return (
