@@ -82,7 +82,7 @@ export default async function EventPage({ params }: EventPageProps) {
   return (
     <main>
       <div className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white border-b border-gray-100">
-        <div className="absolute inset-0 bg-grid-gray-100/25 mask-[radial-gradient(ellipse_at_center,white,transparent)]" />
+        <div className="absolute inset-0 bg-grid-gray-100/25 mask-[radial-gradient(ellipse_at_center,white,transparent)] pointer-events-none" />
         <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
       
           <Link

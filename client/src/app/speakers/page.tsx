@@ -77,8 +77,8 @@ export default async function SpeakersPage() {
 
       <div className="mb-12">
         <div className="inline-flex items-center gap-2 mb-4">
-          <span className="w-8 h-px bg-indigo-600" />
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
+          <span className="w-10 h-3 bg-indigo-600" />
+          <span className="text-2xl font-bold uppercase tracking-[0.2em] text-indigo-600">
             Intervenants
           </span>
         </div>
