@@ -261,31 +261,31 @@ export default function SessionPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6 bg-gray-50 rounded-2xl mb-10">
         <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-gray-400" />
+          <Calendar className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Date</p>
+            <p className="text-xs text-indigo-800 uppercase">Date</p>
             <p className="text-sm font-medium text-gray-900">
               {formatDate(session.startTime)}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Clock className="h-5 w-5 text-gray-400" />
+          <Clock className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Time</p>
+            <p className="text-xs text-indigo-800 uppercase">Time</p>
             <p className="text-sm font-medium text-gray-900">
               {formatTime(session.startTime)} — {formatTime(session.endTime)}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <DoorOpen className="h-5 w-5 text-gray-400" />
+          <DoorOpen className="h-5 w-5 text-indigo-800" />
           <div>
             <Link
            href={`/rooms/${session.roomId}/sessions`}
             className="text-indigo-600  mt-4 inline-block hover:underline"
           >
-             <p className="text-xs text-gray-400 uppercase ">Room</p>
+             <p className="text-xs text-indigo-800 uppercase ">Room</p>
             <p className="text-sm font-medium text-gray-900 ">
               {roomName || "TBD"}
             </p>
@@ -294,9 +294,9 @@ export default function SessionPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Users className="h-5 w-5 text-gray-400" />
+          <Users className="h-5 w-5 text-indigo-800" />
           <div>
-            <p className="text-xs text-gray-400 uppercase">Capacity</p>
+            <p className="text-xs text-indigo-800 uppercase">Capacity</p>
             <p className="text-sm font-medium text-gray-900">
               {session.capacity || "Unlimited"}
             </p>
