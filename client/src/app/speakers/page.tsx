@@ -131,7 +131,7 @@ export default async function SpeakersPage() {
                       </p>
                     )}
 
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-white group-hover:text-gray-700">
+                    <div className="grid grid-col-2 items-center gap-4 text-sm text-white group-hover:text-gray-700">
 
                       <div className="flex items-center gap-1.5">
                         <Mic2 className="h-4 w-4" />
@@ -140,8 +140,8 @@ export default async function SpeakersPage() {
                           {(speaker.sessions?.length || 0) > 1 ? "s" : ""}
                         </span>
                       </div>
-
-                      {speaker.externalLinks && speaker.externalLinks.length > 0 && (
+<div className="flex gap-2">
+    {speaker.externalLinks && speaker.externalLinks.length > 0 && (
                         <>
                           {speaker.externalLinks.map((link, index) => (
                             <a
@@ -149,7 +149,7 @@ export default async function SpeakersPage() {
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={`flex items-center gap-1.5 ${getSocialColor(link)} transition-colors`}
+                              className={`flex  ${getSocialColor(link)} transition-colors`}
                             >
                               <SocialIcon url={link} />
                               <span>{getSocialName(link)}</span>
@@ -157,6 +157,8 @@ export default async function SpeakersPage() {
                           ))}
                         </>
                       )}
+</div>
+                    
 
                     </div>
 
