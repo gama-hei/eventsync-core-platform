@@ -84,15 +84,14 @@ export default async function EventPage({ params }: EventPageProps) {
       <div className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white border-b border-gray-100">
         <div className="absolute inset-0 bg-grid-gray-100/25 mask-[radial-gradient(ellipse_at_center,white,transparent)]" />
         <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
+      
           <Link
             href="/events"
             className=" inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-8"
           >
             <ArrowLeft className="h-8 w-8" />
-
-            <span className="text-2xl group-hover:text-gray-600 text-indigo-600 ">
-              All Event
-            </span>
+<span className="text-2xl text-black">All Event </span>
+           
           </Link>
     
           <div className="flex flex-wrap items-center gap-3 mb-6">
