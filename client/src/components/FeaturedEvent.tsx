@@ -10,8 +10,8 @@ export function FeaturedEvent({ event }: { event: Event }) {
     <section className="relative overflow-hidden rounded-3xl bg-[#FBFBFB] border border-gray-100 p-8 md:p-20 mb-20">
       <div className="relative z-10 max-w-2xl">
         <div className="inline-flex items-center gap-2 mb-8">
-          <span className="w-8 h-px bg-indigo-600" />
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
+          <span className="w-20 h-3 bg-indigo-600" />
+          <span className="text-2xl font-bold uppercase tracking-[0.2em] text-indigo-600">
             Featured Event
           </span>
         </div>

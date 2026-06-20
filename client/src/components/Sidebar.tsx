@@ -36,7 +36,7 @@ export function Sidebar() {
               You've saved <strong>{favoritesCount} sessions</strong>.
             </p>
           ) : (
-            <p className="text-sm text-gray-400 italic mb-6 leading-relaxed">
+            <p className="text-sm text-gray-900 italic mb-6 leading-relaxed">
               Start bookmarking sessions to build your personal event journey.
             </p>
           )}
@@ -53,7 +53,7 @@ export function Sidebar() {
           </h3>
           <div className="space-y-4">
             <div className="group">
-              <p className="text-[11px] font-bold text-gray-400 uppercase mb-1">
+              <p className="text-[20px] font-bold text-indigo-600 uppercase mb-1">
                 Guest WiFi
               </p>
               <p className="text-sm font-medium group-hover:text-indigo-600 transition-colors">
@@ -61,7 +61,7 @@ export function Sidebar() {
               </p>
             </div>
             <div className="group">
-              <p className="text-[11px] font-bold text-gray-400 uppercase mb-1">
+              <p className="text-[20px] font-bold text-indigo-600 uppercase mb-1">
                 Help Desk
               </p>
               <p className="text-sm font-medium group-hover:text-indigo-600 transition-colors">

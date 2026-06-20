@@ -13,19 +13,19 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link
             href="/speakers"
-            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            className="text-sm font-medium text-black-600 hover:text-gray-900 transition-colors"
           >
             Speakers
           </Link>
           <Link
             href="/rooms"
-            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            className="text-sm font-medium text-black-600 hover:text-gray-900 transition-colors"
           >
-            Venues
+            Rooms
           </Link>
           <Link
             href="/favorites"
-            className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            className="flex items-center gap-1 text-sm font-medium text-black hover:text-gray-900 transition-colors"
           >
             <Heart className="h-4 w-4" />
             Favorites
@@ -34,7 +34,7 @@ export function Header() {
             href="/events"
             className="px-6 py-2 text-sm font-medium bg-black text-white rounded-full hover:bg-gray-800 transition-all"
           >
-            Explore
+            All Events
           </Link>
         </nav>
       </div>

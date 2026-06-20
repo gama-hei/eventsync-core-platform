@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Room, Session } from "@/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isLive} from "@/app/events/[id]/page";
+import { isLive } from "@/app/events/[id]/page";
 import Link from "next/link";
 import {
   Calendar,
@@ -15,8 +15,10 @@ import {
   Mic2,
   DoorOpen,
   UsersRound,
-  Radio
+  Radio,
 } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 export default function SessionsPage() {
   const params = useParams();
@@ -25,8 +27,7 @@ export default function SessionsPage() {
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [likedSessions, setLikedSessions] = useState<{ [key: string]: boolean }>({});
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     console.log("roomid:", roomid);
@@ -58,11 +59,10 @@ export default function SessionsPage() {
     }
   }, [roomid]);
 
-
   const toggleLike = (sessionId: string) => {
-    setLikedSessions(prev => ({
+    setLikedSessions((prev) => ({
       ...prev,
-      [sessionId]: !prev[sessionId]
+      [sessionId]: !prev[sessionId],
     }));
   };
 
@@ -87,12 +87,10 @@ export default function SessionsPage() {
     });
   };
 
-  if (loading)
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-12 text-center">
-        Chargement...
-      </div>
-    );
+
+if (loading) {
+  return <LoadingSkeleton />;
+}
   if (error)
     return (
       <div className="max-w-6xl mx-auto px-6 py-12 text-center text-red-600">
@@ -137,17 +135,13 @@ export default function SessionsPage() {
 
             {room.sessions && room.sessions.length > 0 ? (
               room.sessions.map((session: Session) => {
-                // Déclarer la variable live pour chaque session
                 const live = isLive(session.startTime, session.endTime);
-                // Récupérer l'état de like pour cette session
-                const isLiked = likedSessions[session.id] || false;
-                
+
                 return (
                   <div
                     key={session.id}
                     className="border-1 border-card-last-bg p-8 first:border-t-0 rounded-xl"
                   >
-                    {/* Afficher le bouton live UNIQUEMENT si la session est en cours */}
                     {live && (
                       <Button type="button" className="bg-transparent mb-4 p-0">
                         <div className="flex items-center gap-2">
@@ -158,16 +152,18 @@ export default function SessionsPage() {
                         </div>
                       </Button>
                     )}
-                    
+
                     <div className="inline-flex items-center gap-2">
                       <span className="text-xl font-bold uppercase tracking-[0.2em] text-indigo-600">
                         {session.title}
                       </span>
                       <div className="inline-flex items-center gap-3 text-black px-10 py-4 bg-transparent font-bold text-base transition-all">
                         <Heart
-                          onClick={() => toggleLike(session.id)}
+                          onClick={() => session && toggleFavorite(session)}
                           className={`h-6 w-6 cursor-pointer transition-colors ${
-                            isLiked ? "fill-red-500 text-red-500" : "text-gray-400"
+                            session && isFavorite(session.id)
+                              ? "fill-red-500 text-red-500"
+                              : "text-gray-400"
                           }`}
                         />
                       </div>
@@ -176,7 +172,7 @@ export default function SessionsPage() {
                     <p className="text-gray-600 font-normal mb-6 leading-relaxed">
                       {session.description || "Aucune description disponible"}
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-8 mb-12 text-sm font-medium text-foreground">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />{" "}
