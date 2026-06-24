@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 
-  /* config options here */
 
     images: {
     remotePatterns: [
@@ -21,6 +20,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '**.amazonaws.com', 
+      },
+       {
+        protocol: 'https',
+        hostname: 'randomuser.me',
       },
     ],
   },

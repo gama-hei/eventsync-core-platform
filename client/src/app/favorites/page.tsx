@@ -2,7 +2,7 @@
 import { useFavorites } from "@/hooks/useFavorites";
 import { Session } from "@/types/types";
 import Link from "next/link";
-import { Heart, Calendar, Clock, Mic2, Trash2 } from "lucide-react";
+import { Heart, Calendar, Clock, Mic2, Trash2, Home } from "lucide-react";
 import { formatTime } from "@/app/events/[id]/page";
 
 const formatDate = (dateStr: string) =>
@@ -17,14 +17,22 @@ export default function FavoritesPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      {/* Header */}
-      <div className="mb-10">
+  <div className="mb-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+        >
+          <Home className="h-4 w-4" />
+          Back to Home
+        </Link>
+      </div>      <div className="mb-10">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-8 h-px bg-indigo-600" />
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
-            Mes favoris
+            My Favorities
           </span>
         </div>
+        
         <h1 className="text-4xl font-serif font-medium text-black mb-2">
           Sessions sauvegardées
         </h1>

@@ -10,7 +10,6 @@ import school.hei.event_sync.dto.response.QuestionResponse;
 import school.hei.event_sync.service.QuestionService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,17 +19,17 @@ public class QuestionController {
 
     @GetMapping("/sessions/{sessionId}/questions")
     public ResponseEntity<List<QuestionResponse>> getSessionQuestions(@PathVariable String sessionId) {
-        return ResponseEntity.ok(questionService.getSessionQuestions(UUID.fromString(sessionId)));
+        return ResponseEntity.ok(questionService.getSessionQuestions(sessionId));
     }
 
     @PostMapping("/sessions/{sessionId}/questions")
     public ResponseEntity<QuestionResponse> createQuestion(@PathVariable String sessionId,
                                                            @Valid @RequestBody CreateQuestionRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(UUID.fromString(sessionId), request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(sessionId, request));
     }
 
     @PostMapping("/questions/{questionId}/upvote")
     public ResponseEntity<QuestionResponse> upvoteQuestion(@PathVariable String questionId) {
-        return ResponseEntity.ok(questionService.upvoteQuestion(UUID.fromString(questionId)));
+        return ResponseEntity.ok(questionService.upvoteQuestion(questionId));
     }
 }
