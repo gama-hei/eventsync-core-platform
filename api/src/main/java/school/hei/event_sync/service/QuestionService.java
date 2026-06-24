@@ -23,8 +23,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final SessionRepository sessionRepository;
 
-    public List<QuestionResponse> getSessionQuestions(UUID sessionId) {
-        if (!sessionRepository.existsById(String.valueOf(sessionId))) {
+    public List<QuestionResponse> getSessionQuestions(String sessionId) {
+        if (!sessionRepository.existsById(sessionId)) {
             throw new EntityNotFoundException("Session not found: " + sessionId);
         }
         return questionRepository.findBySession_IdOrderByUpvotesDesc(sessionId)
@@ -34,8 +34,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionResponse createQuestion(UUID sessionId, CreateQuestionRequest request) {
-        Session session = sessionRepository.findById(String.valueOf(sessionId))
+    public QuestionResponse createQuestion(String sessionId, CreateQuestionRequest request) {
+        Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + sessionId));
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -50,7 +50,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionResponse upvoteQuestion(UUID questionId) {
+    public QuestionResponse upvoteQuestion(String questionId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("Question not found: " + questionId));
         question.incrementUpvotes();
