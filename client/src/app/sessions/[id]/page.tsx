@@ -40,16 +40,16 @@ export default function SessionPage() {
 
       {live && (
         <div className="mb-6">
-          <span className="inline-block text-xs font-medium text-black bg-gray-100 px-3 py-1 rounded-full uppercase tracking-wider">
+          <span className="inline-block text-xs font-bold text-white bg-black px-3 py-1 rounded-full uppercase tracking-wider">
             ● Live Now
           </span>
         </div>
       )}
 
-      <h1 className="text-5xl md:text-6xl font-serif font-light text-black mb-4 tracking-tight leading-[1.1]">
+      <h1 className="text-5xl md:text-6xl font-serif font-bold text-black mb-4 tracking-tight leading-[1.1]">
         {session.title}
       </h1>
-      <p className="text-xl text-gray-500 font-light leading-relaxed mb-10">
+      <p className="text-xl text-gray-700 font-normal leading-relaxed mb-10">
         {session.description}
       </p>
 
@@ -67,16 +67,20 @@ export default function SessionPage() {
       />
 
       {live ? (
-        <div className="border-t border-gray-100 pt-10">
+        <div className="border-t border-gray-200 pt-10">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <Radio className="h-4 w-4 text-black" />
-              <h2 className="text-xl font-sans font-light text-black tracking-tight">Live Q&A</h2>
-              <span className="text-sm text-gray-400">{questions.length} questions</span>
+              <Radio className="h-5 w-5 text-black" />
+              <h2 className="text-xl font-sans font-bold text-black tracking-tight">
+                Live Q&A
+              </h2>
+              <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-0.5 rounded-full">
+                {questions.length} questions
+              </span>
             </div>
             <button
               onClick={() => setAutoRefresh(!autoRefresh)}
-              className="text-xs text-gray-400 hover:text-black transition-colors"
+              className="text-xs font-medium text-gray-500 hover:text-black transition-colors cursor-pointer"
             >
               {autoRefresh ? "Auto-refresh on" : "Auto-refresh off"}
             </button>
