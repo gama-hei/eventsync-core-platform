@@ -1,7 +1,7 @@
-
 import { UpvoteButton } from "@/components/sessions/UpvoteButton";
 import { formatTime } from "@/lib/utils";
 import { Question } from "@/types";
+import { MessageCircle, User } from "lucide-react";
 
 interface QuestionsListProps {
   questions: Question[];
@@ -9,61 +9,64 @@ interface QuestionsListProps {
   onUpvote: (questionId: string, newUpvotes: number) => void;
 }
 
-function MessageCircle(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
 export function QuestionsList({ questions, sessionId, onUpvote }: QuestionsListProps) {
   const sortedQuestions = [...questions].sort((a, b) => b.upvotes - a.upvotes);
 
   if (sortedQuestions.length === 0) {
     return (
-      <div className="text-center py-16">
-        <MessageCircle className="h-12 w-12 text-gray-200 mx-auto mb-3" />
-        <p className="text-gray-500 font-light">No questions yet</p>
-        <p className="text-sm text-gray-400 font-light">Be the first to ask something!</p>
+      <div className="text-center py-20">
+        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <MessageCircle className="h-8 w-8 text-gray-300" />
+        </div>
+        <p className="text-gray-600 font-medium">No questions yet</p>
+        <p className="text-sm text-gray-400 mt-1">Be the first to ask something!</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {sortedQuestions.map((q, index) => (
         <div
           key={q.id}
-          className={`pb-6 ${index !== sortedQuestions.length - 1 ? "border-b border-gray-50" : ""}`}
+          className={`pb-8 ${
+            index !== sortedQuestions.length - 1 ? "border-b border-gray-100" : ""
+          }`}
         >
-          <div className="flex justify-between items-start gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-1">
-                {index === 0 && q.upvotes > 0 && (
-                  <span className="text-[10px] font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Top
+          <div className="flex gap-4">
+            <div className="shrink-0">
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <User className="h-5 w-5 text-gray-500" />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                {index === 0 && q.upvotes > 5 && (
+                  <span className="text-[10px] font-semibold text-white bg-black px-2 py-0.5 rounded-full">
+                    ★ Top
                   </span>
                 )}
                 <span className="text-sm font-medium text-gray-700">
                   {q.authorName || "Anonymous"}
                 </span>
-                <span className="text-xs text-gray-300">{formatTime(q.createdAt)}</span>
+                <span className="text-xs text-gray-400">· {formatTime(q.createdAt)}</span>
               </div>
-              <p className="text-gray-800 leading-relaxed">{q.content}</p>
+              <p className="text-gray-800 leading-relaxed text-base">{q.content}</p>
             </div>
-            <UpvoteButton
-              questionId={q.id}
-              initialUpvotes={q.upvotes}
-              sessionId={sessionId}
-              onUpvoteSuccess={onUpvote}
-            />
+            <div className="shrink-0">
+              <UpvoteButton
+                questionId={q.id}
+                initialUpvotes={q.upvotes}
+                sessionId={sessionId}
+                onUpvoteSuccess={onUpvote}
+              />
+            </div>
           </div>
         </div>
       ))}
       {sortedQuestions.length > 1 && (
-        <div className="mt-6 text-center text-xs text-gray-300">
-          Questions sorted by popularity (most upvoted first)
+        <div className="mt-2 text-center text-xs text-gray-400">
+          Sorted by popularity — most upvoted first
         </div>
       )}
     </div>
