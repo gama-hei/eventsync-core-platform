@@ -23,7 +23,7 @@ function getSocialLinkType(url: string): 'twitter' | 'linkedin' | 'github' | 'we
 
 function SocialIcon({ url }: { url: string }) {
   const type = getSocialLinkType(url);
-  
+
   if (type === 'twitter') {
     return (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
@@ -31,7 +31,7 @@ function SocialIcon({ url }: { url: string }) {
       </svg>
     );
   }
-  
+
   if (type === 'linkedin') {
     return (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
@@ -39,7 +39,7 @@ function SocialIcon({ url }: { url: string }) {
       </svg>
     );
   }
-  
+
   return <Globe className="h-4 w-4" />;
 }
 
@@ -101,11 +101,11 @@ export default async function SpeakersPage() {
         <div className="space-y-8">
           {speakers.map((speaker) => {
             const profileImageUrl = speaker.profilePicture || '/images/default-avatar.jpg';
-            
+
             return (
               <article key={speaker.id} className="group border-b border-gray-100 pb-8 last:border-0">
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                
+
                   <div className="flex-shrink-0">
                     <Link href={`/speakers/${speaker.id}`}>
                       <Image
