@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { FeaturedEvent } from "@/components/FeaturedEvent";
 import { LiveSessionsList } from "@/components/LiveSessionsList";
 import { Sidebar } from "@/components/Sidebar";
@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-12">
-      <Suspense fallback={<LoadingSkeleton />}>
+      <Suspense fallback={<LoadingSpinner />}>
         {featuredEvent && <FeaturedEvent event={featuredEvent} />}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
