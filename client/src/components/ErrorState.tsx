@@ -9,11 +9,11 @@ export function ErrorState({ message = "Something went wrong", onRetry }: ErrorS
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="text-center max-w-md px-4">
-        <p className="text-gray-500 mb-4">{message}</p>
+        <p className="text-gray-700 mb-4 font-medium">{message}</p>
         {onRetry && (
           <button
             onClick={onRetry}
-            className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-colors"
           >
             Try again
           </button>
