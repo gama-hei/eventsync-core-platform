@@ -1,4 +1,3 @@
-// src/types/index.ts
 
 export interface Speaker {
   id: string;
@@ -14,7 +13,6 @@ export interface Speaker {
   sessions?: Session[];
 }
 
-// Helper pour accéder aux liens
 export function getSpeakerLinks(speaker: Speaker): string[] {
   if (!speaker.externalLinks) return [];
   if (Array.isArray(speaker.externalLinks)) return speaker.externalLinks;
@@ -59,4 +57,15 @@ export interface Question {
   upvotes: number;
   createdAt: string;
   sessionId: string;
+}
+
+export interface CacheOptions {
+  key: string;
+  duration?: number;
+  fetcher: () => Promise<any>;
+}
+
+export interface CacheData<T> {
+  data: T;
+  timestamp: number;
 }
