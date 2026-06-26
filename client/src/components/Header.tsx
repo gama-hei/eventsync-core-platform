@@ -40,7 +40,7 @@ export function Header() {
           </Link>
           <Link
             href="/events"
-            className="px-7 py-2.5 text-base font-medium bg-black text-white rounded-full hover:bg-gray-800 hover:shadow-lg hover:scale-105 transition-all"
+            className="px-7 py-2.5 text-base font-medium bg-black text-white rounded-full"
           >
             Explore
           </Link>
