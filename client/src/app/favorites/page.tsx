@@ -29,35 +29,35 @@ export default function FavoritesPage() {
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-8 h-px bg-indigo-600" />
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">
-            My Favorities
+           Saved Sessions
           </span>
         </div>
-        
+
         <h1 className="text-4xl font-serif font-medium text-black mb-2">
-          Sessions sauvegardées
+          Saved Sessions
         </h1>
         <p className="text-gray-500">
           {favorites.length === 0
-            ? "Aucune session ajoutée pour l'instant."
-            : `${favorites.length} session${favorites.length > 1 ? "s" : ""} dans vos favoris`}
+            ? "No sessions saved yet."
+            : `${favorites.length} session${favorites.length > 1 ? "s" : ""} in your favorites.`}
         </p>
       </div>
 
-      
+
       {favorites.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 gap-4 text-gray-400">
           <Heart className="h-12 w-12" />
-          <p className="text-lg">Explorez les sessions et ajoutez vos favoris</p>
+          <p className="text-lg">Browse sessions and add your favorites</p>
           <Link
             href="/events/"
             className="mt-2 inline-flex items-center gap-2 bg-black text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-zinc-800 transition-all"
           >
-            Voir les événements
+            View events
           </Link>
         </div>
       )}
 
-    
+
       <div className="grid gap-6">
         {favorites.map((session: Session) => (
           <div
